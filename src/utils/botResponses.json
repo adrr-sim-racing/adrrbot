@@ -1,30 +1,11 @@
 {
   "guidelineResponses": {
     "general": [
-      "Read the channel description, {guidelines}",
-      "For Support Read: {guidelines}",
-      "Have you had a chance to review our {guidelines} channel?",
-      "To help keep the discord organized we have specific channels for specific things, read {guidelines}.",
-      "It seems like you might have missed our {guidelines}."
-    ],
-    "music": [
-      "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTQyd2V2ZWR0Y2twN2JqZnh5ZTRpOXY5dmxtbmQ3dmNqb2Q4bTNuOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/yetxv6NWi0MyzJn7P0/giphy.gif"
-    ],
-    "shitposting": [
-      "https://media4.giphy.com/media/l1J3nvV8lJYA5THnG/giphy.gif?cid=ecf05e47818nxlmts5l1i5semyzy9dpisnxqcrv1ofek69sf&ep=v1_gifs_related&rid=giphy.gif",
-      "https://media3.giphy.com/media/5Cjamgy5sWlOaWODms/giphy.gif?cid=ecf05e47h27r4kizkezjat9chicil5rjfv29ji8ms1715brz&ep=v1_gifs_related&rid=giphy.gif"
-    ],
-    "gaming": [
-      "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExczk5YzBzOTBkMnN3dDI2Y21mOTZkYjVidHBhazgycGVlcm94MjV2MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Yycc82XEuWDaLLi2GV/giphy.gif"
-    ],
-    "ox_core": ["Read the channel description, {guidelines}"]
+      "\"I take no responsibility for dickheads crashing you in an open lobby...\" -  *Steve Worrel*"
+    ]
   },
-  "resourceResponses": [
-    "Before asking questions about a resource, make sure you read the [documentation](https://overextended.dev/) and also read {guidelines}.",
-    "You might find what you're looking for in the [documentation](https://overextended.dev/), if not read {guidelines}."
-  ],
   "cooldownResponses": [
     "I need to recharge my tolerance battery; it's running dangerously low.",
-    "I have provided you with as much as I could for now."
+    "I think you might be the problem...?"
   ]
 }

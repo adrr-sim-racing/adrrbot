@@ -55,7 +55,7 @@ export const ignoredRoles = [
   '1341339561988456569', // ADRR
   '1349481104700346390', // ADRR Steward (bot)
   '1349138300580921394', // Discord wizard
-  '1347651304750710866', // ADRR Heroes
+  // '1347651304750710866', // ADRR Heroes
 ];
 
 // channel ID for support-guidelines
@@ -69,4 +69,5 @@ export const whitelistedChannels = [
 export const ChannelIDs = {
   general: '1340659416860721174', // adrr general channel
   usercontent: '1340659416860721175', // adrr user content channel
+  test: '1353837446630084699', // adrr test channel
 };

@@ -9,7 +9,6 @@ const guidelineResponses = Object.fromEntries(
   Object.entries(responsesData.guidelineResponses).map(([key, value]) => [key, value.map(processResponse)])
 );
 
-const resourceResponses = responsesData.resourceResponses.map(processResponse);
 const cooldownResponses = responsesData.cooldownResponses.map(processResponse);
 
-export { guidelineResponses, resourceResponses, cooldownResponses };
+export { guidelineResponses, cooldownResponses };

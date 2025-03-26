@@ -1,7 +1,7 @@
-import { Message, EmbedBuilder, TextChannel } from 'discord.js';
+import { Message, EmbedBuilder, TextChannel, AttachmentBuilder } from 'discord.js';
 import { ignoredRoles, whitelistedChannels } from '../constants';
-import { positivePatterns, resourcePatterns } from '../utils/patterns';
-import { guidelineResponses, resourceResponses, cooldownResponses } from '../handlers/botResponsesHandler';
+import { positivePatterns } from '../utils/patterns';
+import { guidelineResponses, cooldownResponses } from '../handlers/botResponsesHandler';
 import { Bot } from '..';
 import Config from '../config';
 
@@ -37,18 +37,17 @@ export const onMessageCreate = async (message: Message) => {
     return;
   }
 
-  const isResourceMatch = resourcePatterns.some((pattern) => pattern.test(lowerCaseMessage));
   const isPositiveMatch = positivePatterns.some((pattern) => pattern.test(lowerCaseMessage));
 
-  if (isResourceMatch || isPositiveMatch) {
+  if (isPositiveMatch) {
     if (userData.messageCount < 2) {
-      const responseArray = isResourceMatch
-        ? resourceResponses
-        : guidelineResponses[message.channelId] || guidelineResponses['general'];
+      const responseArray = guidelineResponses['general'];
       const randomResponse = responseArray[Math.floor(Math.random() * responseArray.length)];
-      await message.reply(randomResponse);
+      const file = new AttachmentBuilder('https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/image/steve.png');
+      await message.reply({ content: randomResponse, files: [file] });
       lastGlobalResponseTime = now;
       userData.messageCount++;
+      console.log(userId, userData.messageCount);
     } else {
       const randomCooldownResponse = cooldownResponses[Math.floor(Math.random() * cooldownResponses.length)];
       await message.reply(randomCooldownResponse);
