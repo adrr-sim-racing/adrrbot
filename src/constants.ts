@@ -25,8 +25,10 @@ export const Resources = [
   'fivem-lls-addon',
 ];
 export const APIRequestUrls = {
-  baseURL: "https://www.thesimgrid.com/api/v1/",
+  baseURL: "https://www.thesimgrid.com/api/v1",
   getChampionship: "https://www.thesimgrid.com/api/v1/championships/",
+  getUser: "https://www.thesimgrid.com/api/v1/users/"
+
 };
 export const Championships = {
   usc: "13642",
