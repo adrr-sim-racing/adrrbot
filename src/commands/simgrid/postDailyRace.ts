@@ -2,45 +2,10 @@ import { EmbedBuilder, TextChannel, ChatInputCommandInteraction, SlashCommandBui
 import { Bot } from '../..';
 import Config from '../../config';
 import { Command } from '../../interfaces/command';
+import { ChampionshipData, ChampionshipCarClass } from '../../interfaces/simgrid';
 import { ADRRColours, APIRequestUrls, Championships, DailyRaceChannelID } from '../../constants';
 import fetchData from '../../handlers/apiHandler';
 
-interface ChampionshipData {
-  id: number;
-  name: string;
-  start_date: string;
-  end_date: string;
-  capacity: number;
-  spots_taken: number;
-  teams_enabled: boolean;
-  entry_fee_required: boolean;
-  entry_fee_cents: number;
-  accepting_registrations: boolean;
-  races: [RaceData];
-  image: string;
-  host_name: string;
-  game_name: string;
-  url: string;
-  results_url: string;
-}
-
-interface RaceData {
-  id: number;
-  race_name: string;
-  track: string;
-  starts_at: string;
-  display_name: string;
-  results_available: boolean;
-  hot_lap: boolean;
-  ended: boolean;
-}
-
-interface ChampionshipCarClass {
-  id: number;
-  display_name: string;
-  championship_id: string;
-  capacity: string;
-}
 
 function formatDate(isoString: string): string {
   const date = new Date(isoString);
