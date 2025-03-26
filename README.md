@@ -13,5 +13,5 @@ Official Discord Bot for ADRR.net
 
 [Discordjs](https://github.com/discordjs/discord.js)
 
-## Disclaimer
-This bot was created specifically for use in the Overextended Discord. If you plan to use it for your own Discord, please review the code to tailor it to your needs. **We will not provide support for this bot**; the code is shared for transparency and because most Overextended projects are open-source.
+## Credits
+This bot is an adaption of [OxBot](https://github.com/overextended/OxBot) created by the [Overextended](https://overextended.dev/) community. Thank you to Ox team for creating such a great bot!
