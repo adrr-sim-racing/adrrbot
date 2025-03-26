@@ -1,7 +1,7 @@
 services:
   bot:
     container_name: adrrbot
-    image: tom-osborne/adrrbot:latest
+    image: stanocs5/adrrbot:latest
     build: .
     restart: unless-stopped
     command: pnpm start:production
@@ -17,6 +17,7 @@ services:
     image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.docker/config.json:/root/.docker/config.json
     command: --interval 600 adrrbot  # Polls every 10 minutes and updates only the 'adrrbot' container
 
 volumes:
