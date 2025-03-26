@@ -1,6 +1,9 @@
+import { RGBTuple } from "discord.js";
+
 export const GithubUrl = 'https://github.com/overextended';
 export const GithubApi = 'https://api.github.com/repos/overextended';
 export const DocsUrl = 'https://overextended.dev';
+export const WebsiteUrl = 'https://adrr.net';
 export const Resources = [
   'ox_lib',
   'ox_inventory',
@@ -21,6 +24,21 @@ export const Resources = [
   'fivem-typescript-boilerplate',
   'fivem-lls-addon',
 ];
+export const APIRequestUrls = {
+  baseURL: "https://www.thesimgrid.com/api/v1/",
+  getChampionship: "https://www.thesimgrid.com/api/v1/championships/",
+};
+export const Championships = {
+  usc: "13642",
+  daily: "13931",
+}
+export const ADRRColours = {
+  Primary: [235, 251, 72] as RGBTuple,
+  Secondary: [237, 37, 78] as RGBTuple,
+}
+export const ADRRColoursArray: RGBTuple[] = Object.values(ADRRColours);
+
+export const DailyRaceChannelID = "1349283376560865342";
 
 export const ResourceChoices = (() => {
   const arr: { name: string; value: string }[] = new Array(Resources.length);
@@ -34,32 +52,21 @@ export const ResourceChoices = (() => {
 
 // ignored role IDs for onMessageCreate.ts
 export const ignoredRoles = [
-  '814181424840179733', // Admin
-  '819891382114189332', // Shrimp Supreme
-  '933681479878324234', // Dictator
-  '892853647950618675', // Overextended
-  '831961060314972170', // Senior Moderator
-  '945991885783175189', // Moderator
-  '906292806098759750', // Contributor
-  '1120932120056057926', // Affiliate
-  '816709868764921876', // Coffee Drinker
-  '842456416019021895', // Recognized Member
-  '1140367518230397029', // GitHub
+  '1341339561988456569', // ADRR
+  '1349481104700346390', // ADRR Steward (bot)
+  '1349138300580921394', // Discord wizard
+  '1347651304750710866', // ADRR Heroes
 ];
 
 // channel ID for support-guidelines
-export const guidelines = '<#1114827068337815612>';
+export const guidelines = '<#1352780758967914617>';
 
 export const whitelistedChannels = [
-  '829915571394052176', // coffee-club
-  '906294817678590012', // nerd-club
+  '1347653448237322290', // Admin
 ];
 
 // channel IDs for botResponsesHandler.ts
 export const ChannelIDs = {
-  general: '813030955598086177', // ox general channel 813030955598086177
-  music: '871124377129848843', // ox music channel 871124377129848843
-  shitposting: '844240881283366962', // ox shitposting channel 844240881283366962
-  gaming: '894221760315162754', // ox gaming channel 894221760315162754
-  ox_core: '951683419769831465', // ox_core channel 951683419769831465
+  general: '1340659416860721174', // adrr general channel
+  usercontent: '1340659416860721175', // adrr user content channel
 };

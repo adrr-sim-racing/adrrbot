@@ -5,6 +5,8 @@ import {
   User,
   DiscordAPIError,
   GuildMember,
+  TextChannel,
+  MessageFlags,
 } from 'discord.js';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { Command } from '../../interfaces/command';
@@ -28,7 +30,7 @@ export async function warnUser(
     const targetUser = await prisma.user.upsert({
       where: { id: member.user.id },
       update: { warns: { increment: 1 } },
-      create: { id: member.user.id, warns: 1 },
+      create: { id: member.user.id, warns: 1, joinedAt: new Date() },
     });
 
     const { id } = await prisma.warn.create({
@@ -36,6 +38,7 @@ export async function warnUser(
         reason: isAutomatic ? `[AUTO] ${reason}` : reason,
         issuerId: issuer.id,
         targetId: member.user.id,
+        issuedAt: new Date(),
       },
     });
 
@@ -155,7 +158,7 @@ const Warn: Command = {
       return;
     }
 
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     try {
       const member = await interaction.guild.members.fetch(userOption.id);
@@ -163,8 +166,9 @@ const Warn: Command = {
 
       const result = await warnUser(member, issuer, reasonOption, false);
 
+      const channel = interaction.channel as TextChannel;
       if (result.success) {
-        await interaction.channel?.send(`<@${userOption.id}> has been warned. Reason: ${reasonOption}`);
+        await channel?.send(`<@${userOption.id}> has been warned. Reason: ${reasonOption}`);
         await interaction.editReply(
           `Successfully warned <@${userOption.id}>. User is timed out for ${result.timeoutDuration! / 60000} minutes.`
         );

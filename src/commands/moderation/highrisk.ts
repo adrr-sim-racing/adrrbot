@@ -4,6 +4,7 @@ import {
   ChatInputCommandInteraction,
   EmbedBuilder,
   TextChannel,
+  MessageFlags,
 } from 'discord.js';
 import { PrismaClient } from '@prisma/client';
 import { Command } from '../../interfaces/command';
@@ -39,7 +40,7 @@ const HighRisk: Command = {
       return;
     }
 
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     try {
       const threshold = interaction.options.getInteger('threshold') || 75;

@@ -1,8 +1,8 @@
-# Privacy Policy for OxBot
+# Privacy Policy for ADRRBot
 
 Last updated: [Date]
 
-This Privacy Policy describes how Overextended ("we", "us", or "our") collects, uses, and discloses your information when you use our Discord bot "OxBot".
+This Privacy Policy describes how Overextended ("we", "us", or "our") collects, uses, and discloses your information when you use our Discord bot "ADRRBot".
 
 ## 1. Information We Collect
 

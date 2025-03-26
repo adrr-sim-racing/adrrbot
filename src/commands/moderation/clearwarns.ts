@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, GuildMember } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, GuildMember, MessageFlags } from 'discord.js';
 import { PrismaClient } from '@prisma/client';
 import { Command } from '../../interfaces/command';
 import logger from '../../utils/logger';
@@ -26,7 +26,7 @@ const ClearWarn: Command = {
       return;
     }
 
-    interaction.deferReply({ ephemeral: true });
+    interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const userOption = interaction.options.getUser('user', true);
     const member: GuildMember | null = await interaction.guild.members.fetch(userOption.id).catch(() => null);

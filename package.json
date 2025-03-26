@@ -1,15 +1,15 @@
 {
-  "name": "oxbot",
-  "version": "2.0.0",
+  "name": "adrrbot",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-  "build": "pnpm tsc",
-  "start": "pnpm node build/index.js",
-  "start:production": "pnpm build && pnpm start",
-  "dev": "pnpm nodemon -L",
-  "postinstall": "prisma generate"
-},
+    "build": "pnpm tsc",
+    "start": "pnpm node build/index.js",
+    "start:production": "pnpm build && pnpm start",
+    "dev": "pnpm nodemon -L",
+    "postinstall": "prisma generate"
+  },
   "devDependencies": {
     "@types/node": "^20.14.12",
     "@types/node-fetch": "^2.6.12",

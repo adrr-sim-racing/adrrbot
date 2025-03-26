@@ -7,6 +7,7 @@ import {
   TextChannel,
   EmbedBuilder,
   ChannelType,
+  MessageFlags,
 } from 'discord.js';
 import { PrismaClient } from '@prisma/client';
 import { Command } from '../../interfaces/command';
@@ -291,7 +292,7 @@ const RiskScan: Command = {
       return;
     }
 
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     try {
       const filter = interaction.options.getString('filter', true);

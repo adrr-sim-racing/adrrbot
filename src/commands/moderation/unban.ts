@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionFlagsBits, CommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits, CommandInteraction, MessageFlags } from 'discord.js';
 import { PrismaClient } from '@prisma/client';
 import { Command } from '../../interfaces/command';
 import logger from '../../utils/logger';
@@ -21,7 +21,7 @@ const Unban: Command = {
       return;
     }
 
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const userOption = interaction.options.get('user');
     const reasonOption = interaction.options.get('reason');

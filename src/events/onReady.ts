@@ -28,6 +28,7 @@ export const onReady = async (Bot: Client) => {
 
   try {
     logger.info('Clearing existing commands...');
+    logger.info('Member Join channel: ', Bot.channels.cache.get(Config.MEMBER_JOIN_CHANNEL));
 
     if (Config.NODE_ENV === 'development') {
       await rest.put(Routes.applicationGuildCommands(Config.CLIENT_ID, Config.GUILD_ID), { body: [] });
@@ -63,13 +64,13 @@ export const onReady = async (Bot: Client) => {
       });
 
     if (logChannel) {
-      await logChannel.send({ embeds: [embed] });
+      //await logChannel.send({ embeds: [embed] });
     }
 
     logger.info('Bot ready');
 
     Bot.user?.setPresence({
-      activities: [{ name: 'https://overextended.dev/', type: ActivityType.Custom }],
+      activities: [{ name: 'https://adrr.net/', type: ActivityType.Custom }],
       status: 'online',
     });
   } catch (error) {

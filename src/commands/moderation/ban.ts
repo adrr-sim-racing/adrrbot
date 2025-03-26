@@ -45,6 +45,7 @@ const Ban: Command = {
           reason: reason,
           issuerId: interaction.user.id,
           targetId: user.id,
+          issuedAt: new Date(),
         },
       });
 

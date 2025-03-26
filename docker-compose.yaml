@@ -1,7 +1,6 @@
-version: '3.9'
 services:
   bot:
-    container_name: oxbot
+    container_name: adrrbot
     build: .
     volumes:
       - ./src:/app/src

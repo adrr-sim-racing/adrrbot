@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, TextChannel } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, TextChannel, MessageFlags } from 'discord.js';
 import { Command } from '../../interfaces/command';
 import logger from '../../utils/logger';
 
@@ -46,7 +46,7 @@ const Purge: Command = {
       return;
     }
 
-    interaction.deferReply({ ephemeral: true });
+    interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     if (subcommand === 'any') {
       try {

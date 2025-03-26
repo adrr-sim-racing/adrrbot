@@ -11,11 +11,8 @@ const Guild: Command = {
         .setDescription('Guild name')
         .setRequired(true)
         .addChoices(
-          { name: 'ESX', value: 'esx' },
-          { name: 'Qbox', value: 'qbox' },
-          { name: 'project-error', value: 'project-error' },
-          { name: 'txAdmin', value: 'txAdmin' },
-          { name: 'Cfx.re', value: 'cfx' }
+          { name: 'SimGrid', value: 'simgrid' },
+          { name: 'VMS', value: 'vms' },
         )
     ),
 
@@ -23,23 +20,11 @@ const Guild: Command = {
     const guildName = interaction.options.getString('name');
 
     switch (guildName) {
-      case 'qbox':
-        await interaction.reply('https://discord.gg/AtbwBuJHN5');
+      case 'simgrid':
+        await interaction.reply('https://discord.gg/XFTt9bHYhV');
         break;
-      case 'esx':
-        await interaction.reply('https://discord.com/invite/RPX2GssV6r');
-        break;
-      case 'project-error':
-        await interaction.reply('https://discord.gg/FbFXcM5rGz');
-        break;
-      case 'txAdmin':
-        await interaction.reply('https://discord.gg/yWxjt9zPWR');
-        break;
-      case 'cfx':
-        await interaction.reply('https://discord.gg/fivem');
-        break;
-      default:
-        await interaction.reply({ content: 'Invalid guild selected.', ephemeral: true });
+      case 'vms':
+        await interaction.reply('https://discord.gg/gVyNTTAUEW');
         break;
     }
   },

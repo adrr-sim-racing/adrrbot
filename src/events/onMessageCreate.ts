@@ -67,7 +67,7 @@ async function sendCooldownLog(message: Message, lastResponseTime: number) {
 
   const embed = new EmbedBuilder()
     .setColor('#ff0000')
-    .setTitle(`${message.author.tag} is currently being ignored by OxBot`)
+    .setTitle(`${message.author.tag} is currently being ignored by ADRR Race Director`)
     .setDescription(`Ignored for ${minutes} minutes, ${seconds} seconds`)
     .setTimestamp()
     .setFooter({ text: `User ID: ${message.author.id}` });

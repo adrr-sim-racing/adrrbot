@@ -1,9 +1,7 @@
-version: '3.9'
-
 services:
   bot:
-    container_name: oxbot
-    image: ipajudd/oxbot:latest
+    container_name: adrrbot
+    image: tom-osborne/adrrbot:latest
     build: .
     restart: unless-stopped
     command: pnpm start:production
@@ -11,15 +9,15 @@ services:
       - db-data:/app/prisma
       - ./.env:/app/.env
     env_file:
-      - ./.env 
-    environment:
-      - DATABASE_URL=file:/app/prisma/data.db
+      - ./.env
+    # environment:
+    #   - DATABASE_URL=file:/app/prisma/data.db
 
   watchtower:
     image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 600 oxbot  # Polls every 10 minutes and updates only the 'oxbot' container
+    command: --interval 600 adrrbot  # Polls every 10 minutes and updates only the 'adrrbot' container
 
 volumes:
   db-data:

@@ -3,19 +3,11 @@ import Config from '../config';
 import logger from '../utils/logger';
 
 const commandWhitelist = new Set([
-  'docs',
-  'issue',
-  'ox',
   'ping',
-  'repo',
   'guild',
   'whois',
   'warn',
-  'rps',
-  'coinflip',
-  'magic8ball',
-  'node',
-  'release',
+  'daily',
 ]);
 
 function getChannelMention(channel: TextChannel | null) {

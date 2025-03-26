@@ -1,8 +1,8 @@
-# Terms of Service for OxBot
+# Terms of Service for ADRRBot
 
 Last updated: [Date]
 
-Please read these Terms of Service ("Terms", "Terms of Service") carefully before using OxBot operated by Overextended ("us", "we", or "our").
+Please read these Terms of Service ("Terms", "Terms of Service") carefully before using ADRRBot operated by ADRR ("us", "we", or "our").
 
 Your access to and use of the Bot is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all users and others who access or use the Bot.
 

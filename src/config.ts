@@ -8,8 +8,10 @@ const envVars = {
   DISCORD_TOKEN: process.env.TOKEN,
   LOG_CHANNEL: process.env.LOG_CHANNEL,
   MEMBER_ACTIVITY_CHANNEL: process.env.MEMBER_ACTIVITY_CHANNEL,
+  MEMBER_JOIN_CHANNEL: process.env.MEMBER_JOIN_CHANNEL,
   MEMBER_ROLE_ID: process.env.MEMBER_ROLE_ID,
   NODE_ENV: process.env.NODE_ENV || 'development',
+  SIMGRID_API_KEY: process.env.SIMGRID_API_KEY,
 };
 
 const missingVars = Object.entries(envVars)
@@ -26,8 +28,10 @@ interface Env {
   GUILD_ID: string;
   LOG_CHANNEL: string;
   MEMBER_ACTIVITY_CHANNEL: string;
+  MEMBER_JOIN_CHANNEL: string;
   MEMBER_ROLE_ID: string;
   NODE_ENV: string;
+  SIMGRID_API_KEY: string;
 }
 
 const Config: Env = {
@@ -36,8 +40,10 @@ const Config: Env = {
   DISCORD_TOKEN: envVars.DISCORD_TOKEN!,
   LOG_CHANNEL: envVars.LOG_CHANNEL!,
   MEMBER_ACTIVITY_CHANNEL: envVars.MEMBER_ACTIVITY_CHANNEL!,
+  MEMBER_JOIN_CHANNEL: envVars.MEMBER_JOIN_CHANNEL!,
   MEMBER_ROLE_ID: envVars.MEMBER_ROLE_ID!,
   NODE_ENV: envVars.NODE_ENV,
+  SIMGRID_API_KEY: envVars.SIMGRID_API_KEY!,
 };
 
 export default Config;
