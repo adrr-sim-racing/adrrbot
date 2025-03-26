@@ -34,3 +34,33 @@ export interface ChampionshipCarClass {
   championship_id: string;
   capacity: string;
 }
+
+export interface SimGridTeam {
+  team_id: number;
+  name: string;
+  total_races_started: number;
+  total_wins: number;
+  total_podiums: number;
+  total_penalty_rate: number;
+}
+
+export interface SimGridRating {
+  game_id: number;
+  rating: number;
+  preferred: boolean;
+}
+
+export interface SimGridUser {
+  user_id: number;
+  username: string;
+  steam64_id: string;
+  discord_uid: string;
+  preferred_name: string;
+  teams: SimGridTeam[];
+  total_races_started: number;
+  total_wins: number;
+  total_podiums: number;
+  simgrid_pro_active: null | boolean;
+  boosted_hosts: any[];
+  grid_ratings: SimGridRating[];
+}
