@@ -68,12 +68,12 @@ const postDailyRace: Command = {
 
     try {
       await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-      const requestURL = `${APIRequestUrls.getChampionship}${championshipId}`;
-      const data = (await fetchData(requestURL, requestOptions)) as ChampionshipData;
-      const carClassData = (await fetchData(
-        `${APIRequestUrls.baseURL}championships/${data.id}/championship_car_classes`,
-        requestOptions
-      )) as ChampionshipCarClass[];
+
+      const getChampionshipURL = `${APIRequestUrls.getChampionship}${championshipId}`;
+      const data = await fetchData(getChampionshipURL, requestOptions) as ChampionshipData;
+
+      const getCarClassDataURL = getChampionshipURL + '/championship_car_classes';
+      const carClassData = await fetchData(getCarClassDataURL, requestOptions) as ChampionshipCarClass[];
 
       const extractedNames = carClassData.map((carClass) => carClass.display_name.split(' - ')[1]);
 
