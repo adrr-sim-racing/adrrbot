@@ -1,4 +1,5 @@
 import { RGBTuple } from "discord.js";
+import Config from './config';
 
 export const GithubUrl = 'https://github.com/overextended';
 export const GithubApi = 'https://api.github.com/repos/overextended';
@@ -29,6 +30,15 @@ export const APIRequestUrls = {
   getChampionship: "https://www.thesimgrid.com/api/v1/championships/",
   getUser: "https://www.thesimgrid.com/api/v1/users/"
 
+};
+
+export const RequestOptions: RequestInit = {
+  method: 'GET',
+  redirect: 'follow',
+  headers: {
+    'Content-Type': 'application/json; charset=utf-8',
+    Authorization: `Bearer ${Config.SIMGRID_API_KEY}`,
+  },
 };
 export const Championships = {
   usc: "13642",

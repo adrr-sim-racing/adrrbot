@@ -1,9 +1,8 @@
 import { EmbedBuilder, TextChannel, ChatInputCommandInteraction, SlashCommandBuilder, MessageFlags, PermissionFlagsBits } from 'discord.js';
 import { Bot } from '../..';
-import Config from '../../config';
 import { Command } from '../../interfaces/command';
 import { ChampionshipData, ChampionshipCarClass } from '../../interfaces/simgrid';
-import { ADRRColours, APIRequestUrls, Championships, DailyRaceChannelID } from '../../constants';
+import { ADRRColours, APIRequestUrls, Championships, DailyRaceChannelID, RequestOptions } from '../../constants';
 import fetchData from '../../handlers/apiHandler';
 
 
@@ -57,23 +56,14 @@ const postDailyRace: Command = {
         ? Championships[championshipChoice as keyof typeof Championships]
         : null;
 
-    const requestOptions: RequestInit = {
-      method: 'GET',
-      redirect: 'follow',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        Authorization: `Bearer ${Config.SIMGRID_API_KEY}`,
-      },
-    };
-
     try {
       await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
       const getChampionshipURL = `${APIRequestUrls.getChampionship}${championshipId}`;
-      const data = await fetchData(getChampionshipURL, requestOptions) as ChampionshipData;
+      const data = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
 
       const getCarClassDataURL = getChampionshipURL + '/championship_car_classes';
-      const carClassData = await fetchData(getCarClassDataURL, requestOptions) as ChampionshipCarClass[];
+      const carClassData = await fetchData(getCarClassDataURL, RequestOptions) as ChampionshipCarClass[];
 
       const extractedNames = carClassData.map((carClass) => carClass.display_name.split(' - ')[1]);
 
