@@ -20,6 +20,8 @@ RUN echo "Running prisma migrate deploy"
 RUN npx prisma migrate deploy
 RUN echo "prisma migrate deploy complete"
 
+RUN pnpm build
+
 RUN adduser -D adrrbot
 RUN chown -R adrrbot:adrrbot /app/prisma
 USER adrrbot
