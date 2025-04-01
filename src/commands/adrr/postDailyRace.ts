@@ -6,15 +6,13 @@ import { ADRRColours, APIRequestUrls, Championships, DailyRaceChannelID, Request
 import fetchData from '../../handlers/apiHandler';
 
 
-function formatDate(isoString: string): string {
+function formatDiscordTimestamp(isoString: string): string {
   const date = new Date(isoString);
+  const timestamp = Math.floor(date.getTime() / 1000); // Convert to UNIX timestamp (seconds)
 
-  const day = date.getUTCDate();
-  const month = new Intl.DateTimeFormat('en-GB', { month: 'long' }).format(date);
-  const time = date.toISOString().substring(11, 16); // Extract "HH:mm"
-
-  return `${getOrdinal(day)} ${month} ${time} UTC`;
+  return `<t:${timestamp}:F>`;
 }
+
 
 function getOrdinal(day: number): string {
   if (day > 3 && day < 21) return day + 'th'; // Covers 4th to 20th
@@ -91,7 +89,7 @@ const postDailyRace: Command = {
         .setFields(
           {
             name: 'Race Information',
-            value: `🔹${formatDate(data.races[0].starts_at)}\n🔹${data.races[0].track}\n🔹${carClasses}`,
+            value: `🔹${formatDiscordTimestamp(data.races[0].starts_at)}\n🔹${data.races[0].track}\n🔹${carClasses}`,
             inline: false,
           },
           {
