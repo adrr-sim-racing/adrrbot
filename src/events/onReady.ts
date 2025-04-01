@@ -64,7 +64,7 @@ export const onReady = async (Bot: Client) => {
       });
 
     if (logChannel) {
-      //await logChannel.send({ embeds: [embed] });
+      await logChannel.send({ embeds: [embed] });
     }
 
     logger.info('Bot ready');
@@ -75,5 +75,9 @@ export const onReady = async (Bot: Client) => {
     });
   } catch (error) {
     logger.error('Failed to register commands:', error);
+    if (error instanceof Error) {
+      logger.error('Error message:', error.message);
+      logger.error('Error stack:', error.stack);
+    }
   }
 };
