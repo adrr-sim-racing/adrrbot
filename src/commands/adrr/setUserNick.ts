@@ -13,7 +13,7 @@ const setUserNick: Command = {
     .addUserOption((option) => option.setName('user').setDescription('The user to update').setRequired(true))
     .addBooleanOption((option) => option.setName('clear').setDescription('Clears the nickname if true. Sets nickname if false.')),
   run: async (interaction: ChatInputCommandInteraction) => {
-    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    await interaction.deferReply({ ephemeral: true });
     
     if (!interaction.guild) {
       await interaction.editReply({ content: 'This command can only be used in a guild.' });
