@@ -124,9 +124,9 @@ export const onMemberJoin = async (member: GuildMember) => {
     const userRenamedEmbed = new EmbedBuilder()
       .setColor('#FFFF00')
       .setTitle('Member nickname updated')
-      .setDescription(`**${oldNickname} has been **renamed** to <@${member.id}>.`)
+      .setDescription(`**${oldNickname}** has been **renamed** to <@${member.id}>.`)
       .addFields(
-        { name: 'Preferred Name', value: preferredName, inline: true },
+        { name: 'SimGrid Preferred Name', value: preferredName, inline: true },
         { name: 'Old Nickname', value: oldNickname, inline: true },
         { name: 'SimGrid ID', value: `[${userData.user_id}](https://www.thesimgrid.com/drivers/${userData.user_id})`, inline: true },
       )
