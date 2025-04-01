@@ -116,7 +116,7 @@ export const onMemberJoin = async (member: GuildMember) => {
       logger.error(msg);
       return;
     }
-
+    const oldNickname = member.displayName;
     await member.setNickname(preferredName, 'Set nickname to SimGrid preferred name')
     .then(member => console.log(`Set nickname of ${member.user.username}`))
     .catch(console.error);
@@ -124,9 +124,14 @@ export const onMemberJoin = async (member: GuildMember) => {
     const userRenamedEmbed = new EmbedBuilder()
       .setColor('#FFFF00')
       .setTitle('Member nickname updated')
-      .setDescription(`<@${member.id}> has been **renamed** to <@${preferredName}>.`)
+      .setDescription(`**${oldNickname} has been **renamed** to <@${member.id}>.`)
+      .addFields(
+        { name: 'Preferred Name', value: preferredName, inline: true },
+        { name: 'Old Nickname', value: oldNickname, inline: true },
+        { name: 'SimGrid ID', value: `[${userData.user_id}](https://www.thesimgrid.com/drivers/${userData.user_id})`, inline: true },
+      )
       .setAuthor({
-        name: member.displayName || 'Unknown Username',
+        name: oldNickname || 'Unknown Username',
         iconURL: member.displayAvatarURL(),
       })
       .setTimestamp(new Date())
