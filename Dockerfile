@@ -22,8 +22,8 @@ RUN echo "prisma migrate deploy complete"
 
 RUN pnpm build
 
-RUN adduser -D adrrbot
-RUN chown -R adrrbot:adrrbot /app/prisma
-USER adrrbot
+# RUN adduser -D adrrbot
+# RUN chown -R adrrbot:adrrbot /app/prisma
+# USER adrrbot
 
 CMD [ "pnpm", "start:production" ]
