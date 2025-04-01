@@ -1,8 +1,11 @@
 import { GuildMember, TextChannel } from 'discord.js';
+import { APIRequestUrls } from '../constants';
 import Config from '../config';
 import logger from '../utils/logger';
 import { assessAndWarnHighRiskUser } from '../utils/riskScoring';
 import { PrismaClient } from '@prisma/client';
+import fetchData from '../handlers/apiHandler';
+import { ChampionshipData, SimGridUser } from '../interfaces/simgrid';
 
 const prisma = new PrismaClient();
 const MAX_RETRIES = 3;
@@ -94,4 +97,34 @@ export const onMemberJoin = async (member: GuildMember) => {
         : error
     );
   }
+
+  // if(member.user.id !== '423874938160676886') return;
+
+  // logger.debug('Starting member rename');
+  // const requestOptions: RequestInit = {
+  //   method: 'GET',
+  //   redirect: 'follow',
+  //   headers: {
+  //     'Content-Type': 'application/json; charset=utf-8',
+  //     Authorization: `Bearer ${Config.SIMGRID_API_KEY}`,
+  //   },
+  // };
+
+  // const requestURL = `${APIRequestUrls.getUser}${member.user.id}`;
+  // const userData = await fetchData(requestURL, requestOptions) as SimGridUser;
+
+  // if (!userData) {
+  //   logger.error(`User data not found for ${member.user.tag} (${member.id})`);
+  //   return;
+  // }
+
+  // try {
+  //   const userName = userData.preferred_name;
+
+  //   await member.setNickname(userName);
+  //   logger.info(`Updated nickname for ${member.user.tag} (${member.id}) to ${userName}`);
+  // }
+  // catch (error) {
+  //   logger.error('Error fetching user data:', error);
+  // }
 };

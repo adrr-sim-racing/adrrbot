@@ -10,15 +10,15 @@ services:
       - ./.env:/app/.env
     env_file:
       - ./.env
-    # environment:
-    #   - DATABASE_URL=file:/app/prisma/data.db
+    environment:
+      - DATABASE_URL=file:/app/prisma/data.db
 
   watchtower:
     image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/.docker/config.json:/root/.docker/config.json
-    command: --interval 600 adrrbot  # Polls every 10 minutes and updates only the 'adrrbot' container
+    command: --interval 7200 adrrbot  # Polls every 100 minutes and updates only the 'adrrbot' container
 
 volumes:
   db-data:
