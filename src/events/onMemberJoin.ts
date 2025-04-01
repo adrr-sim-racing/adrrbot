@@ -22,8 +22,10 @@ export const onMemberJoin = async (member: GuildMember) => {
   }
 
   try {
-    const welcomeMessage = `Welcome <@${member.user.id}> (${member.user.username}) to the server!`;
-    await channel.send(welcomeMessage);
+    if(member.id !== '943939421454086184') { // Burt Munro (test account)
+      const welcomeMessage = `Welcome <@${member.user.id}> (${member.user.username}) to the server!`;
+      await channel.send(welcomeMessage);
+    }
     logger.debug(`Sent welcome message for ${member.user.tag}`);
   } catch (error) {
     logger.error(`Failed to send welcome message for ${member.user.tag}:`, error);
@@ -100,6 +102,7 @@ export const onMemberJoin = async (member: GuildMember) => {
     );
   }
 
+  // TODO: Move this to a separate function
   if (!logChannel) {
     logger.error(`Member activity channel ${Config.MEMBER_JOIN_CHANNEL} not found`);
     return;
@@ -116,7 +119,7 @@ export const onMemberJoin = async (member: GuildMember) => {
       logger.error(msg);
       return;
     }
-    const oldNickname = member.displayName;
+    const oldNickname = member.user.displayName;
     await member.setNickname(preferredName, 'Set nickname to SimGrid preferred name')
     .then(member => console.log(`Set nickname of ${member.user.username}`))
     .catch(console.error);
@@ -135,11 +138,11 @@ export const onMemberJoin = async (member: GuildMember) => {
         iconURL: member.displayAvatarURL(),
       })
       .setTimestamp(new Date())
-      .setFooter({ text: `Member ID: ${member.id}` });
+      .setFooter({ text: `Member ID: ${member.user.id}` });
   
       await logChannel.send({ embeds: [userRenamedEmbed] });
 
-    logger.info(`Updated nickname for ${member.user.tag} (${member.id}) to ${preferredName}`);
+    logger.info(`Updated nickname for ${member.user.tag} (${member.user.id}) to ${preferredName}`);
   } catch (error) {
     logger.error('Command setnick failed:', error);
   }
