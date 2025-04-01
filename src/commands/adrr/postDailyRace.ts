@@ -1,4 +1,4 @@
-import { EmbedBuilder, TextChannel, ChatInputCommandInteraction, SlashCommandBuilder, MessageFlags, PermissionFlagsBits } from 'discord.js';
+import { EmbedBuilder, TextChannel, ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits, APIMessageActionRowComponent } from 'discord.js';
 import { Bot } from '../..';
 import { Command } from '../../interfaces/command';
 import { ChampionshipData, ChampionshipCarClass } from '../../interfaces/simgrid';
@@ -113,7 +113,23 @@ const postDailyRace: Command = {
           value: `${data.results_url}`,
         });
 
-      await AnnounceChannel?.send({ embeds: [championshipEmbed] });
+      await AnnounceChannel?.send({
+        embeds: [championshipEmbed],
+        "components": [
+          {
+              "type": 1,
+              "components": [
+                  {
+                      "type": 2,
+                      "label": "Register",
+                      "style": 5,
+                      "url": `https://www.thesimgrid.com/user_championships/new?registerable_id=${data.id}&registerable_type=Championship`,
+                  } as APIMessageActionRowComponent,
+              ]
+  
+          }
+      ]
+      });
     } catch (error) {
       console.error('Error fetching championship data:', error);
       await interaction.editReply('Failed to retrieve championship data. Please try again later.');
