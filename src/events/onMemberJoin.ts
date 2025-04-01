@@ -1,11 +1,11 @@
-import { GuildMember, TextChannel } from 'discord.js';
-import { APIRequestUrls } from '../constants';
+import { GuildMember, TextChannel, EmbedBuilder } from 'discord.js';
+import { APIRequestUrls, RequestOptions } from '../constants';
 import Config from '../config';
 import logger from '../utils/logger';
 import { assessAndWarnHighRiskUser } from '../utils/riskScoring';
 import { PrismaClient } from '@prisma/client';
 import fetchData from '../handlers/apiHandler';
-import { ChampionshipData, SimGridUser } from '../interfaces/simgrid';
+import { SimGridUser } from '../interfaces/simgrid';
 
 const prisma = new PrismaClient();
 const MAX_RETRIES = 3;
@@ -14,6 +14,8 @@ const RETRY_DELAY = 5 * 60 * 1000;
 export const onMemberJoin = async (member: GuildMember) => {
   logger.debug(`Member join event triggered for ${member.user.tag} (${member.id})`);
   const channel = member.guild.channels.cache.get(Config.MEMBER_JOIN_CHANNEL) as TextChannel;
+  const logChannel = member.guild.channels.cache.get(Config.LOG_CHANNEL) as TextChannel;
+
   if (!channel) {
     logger.error(`Member activity channel ${Config.MEMBER_JOIN_CHANNEL} not found`);
     return;
@@ -98,33 +100,42 @@ export const onMemberJoin = async (member: GuildMember) => {
     );
   }
 
-  // if(member.user.id !== '423874938160676886') return;
+  if (!logChannel) {
+    logger.error(`Member activity channel ${Config.MEMBER_JOIN_CHANNEL} not found`);
+    return;
+  }
+  
+  const userDataRequestURL = APIRequestUrls.getUser + member.id + '?attribute=discord';
 
-  // logger.debug('Starting member rename');
-  // const requestOptions: RequestInit = {
-  //   method: 'GET',
-  //   redirect: 'follow',
-  //   headers: {
-  //     'Content-Type': 'application/json; charset=utf-8',
-  //     Authorization: `Bearer ${Config.SIMGRID_API_KEY}`,
-  //   },
-  // };
+  try {
+    const userData = await fetchData(userDataRequestURL, RequestOptions) as SimGridUser;
+    const preferredName = userData.preferred_name;
+    if (!preferredName) {
+      const msg = `No preferred name found for ${member.user.tag} (${member.id})`;
+      await logChannel.send({ content: msg });
+      logger.error(msg);
+      return;
+    }
 
-  // const requestURL = `${APIRequestUrls.getUser}${member.user.id}`;
-  // const userData = await fetchData(requestURL, requestOptions) as SimGridUser;
+    await member.setNickname(preferredName, 'Set nickname to SimGrid preferred name')
+    .then(member => console.log(`Set nickname of ${member.user.username}`))
+    .catch(console.error);
 
-  // if (!userData) {
-  //   logger.error(`User data not found for ${member.user.tag} (${member.id})`);
-  //   return;
-  // }
+    const userRenamedEmbed = new EmbedBuilder()
+      .setColor('#FFFF00')
+      .setTitle('Member nickname updated')
+      .setDescription(`<@${member.id}> has been **renamed** to <@${preferredName}>.`)
+      .setAuthor({
+        name: member.displayName || 'Unknown Username',
+        iconURL: member.displayAvatarURL(),
+      })
+      .setTimestamp(new Date())
+      .setFooter({ text: `Member ID: ${member.id}` });
+  
+      await logChannel.send({ embeds: [userRenamedEmbed] });
 
-  // try {
-  //   const userName = userData.preferred_name;
-
-  //   await member.setNickname(userName);
-  //   logger.info(`Updated nickname for ${member.user.tag} (${member.id}) to ${userName}`);
-  // }
-  // catch (error) {
-  //   logger.error('Error fetching user data:', error);
-  // }
+    logger.info(`Updated nickname for ${member.user.tag} (${member.id}) to ${preferredName}`);
+  } catch (error) {
+    logger.error('Command setnick failed:', error);
+  }
 };
