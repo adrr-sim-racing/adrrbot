@@ -46,7 +46,7 @@ const Purge: Command = {
       return;
     }
 
-    interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    await interaction.deferReply({ ephemeral: true });
 
     if (subcommand === 'any') {
       try {

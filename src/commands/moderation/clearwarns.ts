@@ -26,7 +26,7 @@ const ClearWarn: Command = {
       return;
     }
 
-    interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    await interaction.deferReply({ ephemeral: true });
 
     const userOption = interaction.options.getUser('user', true);
     const member: GuildMember | null = await interaction.guild.members.fetch(userOption.id).catch(() => null);

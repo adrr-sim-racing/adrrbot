@@ -21,7 +21,7 @@ const Unban: Command = {
       return;
     }
 
-    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    await interaction.deferReply({ ephemeral: true });
 
     const userOption = interaction.options.get('user');
     const reasonOption = interaction.options.get('reason');

@@ -292,7 +292,7 @@ const RiskScan: Command = {
       return;
     }
 
-    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    await interaction.deferReply({ ephemeral: true });
 
     try {
       const filter = interaction.options.getString('filter', true);

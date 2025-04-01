@@ -82,7 +82,7 @@ const PopulateDB: Command = {
       return;
     }
 
-    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    await interaction.deferReply({ ephemeral: true });
 
     try {
       let members;

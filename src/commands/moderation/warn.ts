@@ -158,7 +158,7 @@ const Warn: Command = {
       return;
     }
 
-    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    await interaction.deferReply({ ephemeral: true });
 
     try {
       const member = await interaction.guild.members.fetch(userOption.id);

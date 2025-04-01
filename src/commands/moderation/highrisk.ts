@@ -40,7 +40,7 @@ const HighRisk: Command = {
       return;
     }
 
-    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    await interaction.deferReply({ ephemeral: true });
 
     try {
       const threshold = interaction.options.getInteger('threshold') || 75;
