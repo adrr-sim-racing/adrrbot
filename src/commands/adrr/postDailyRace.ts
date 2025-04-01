@@ -57,7 +57,7 @@ const postDailyRace: Command = {
         : null;
 
     try {
-      await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+      await interaction.deferReply({ ephemeral: true });
 
       const getChampionshipURL = `${APIRequestUrls.getChampionship}${championshipId}`;
       const data = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
