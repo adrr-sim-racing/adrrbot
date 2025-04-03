@@ -108,10 +108,15 @@ export const onMemberJoin = async (member: GuildMember) => {
     return;
   }
   
-  const userDataRequestURL = APIRequestUrls.getUser + member.id + '?attribute=discord';
+  const userDataRequestURL = `${APIRequestUrls.getUser}${member.id}?attribute=discord`;
 
   try {
+    logger.info(`Requesting data for member: ${member.user} id: ${member.user.tag}`);
+    logger.info(`Request URL:  ${userDataRequestURL}`);
+
     const userData = await fetchData(userDataRequestURL, RequestOptions) as SimGridUser;
+    logger.info(`Response:  ${userData}`);
+
     const preferredName = userData.preferred_name;
     if (!preferredName) {
       const msg = `No preferred name found for ${member.user.tag} (${member.id})`;
@@ -144,6 +149,7 @@ export const onMemberJoin = async (member: GuildMember) => {
 
     logger.info(`Updated nickname for ${member.user.tag} (${member.user.id}) to ${preferredName}`);
   } catch (error) {
-    logger.error('Command setnick failed:', error);
+    logger.error(`Request URL:  ${userDataRequestURL}`);
+    logger.error(`Failed to set nickname for member id: ${member.id}`, error);
   }
 };
