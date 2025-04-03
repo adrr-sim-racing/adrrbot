@@ -151,5 +151,7 @@ export const onMemberJoin = async (member: GuildMember) => {
   } catch (error) {
     logger.error(`Request URL:  ${userDataRequestURL}`);
     logger.error(`Failed to set nickname for member id: ${member.id}`, error);
+    const msg = `Failed to set name for ${member.user.tag} (${member.id})`;
+    await logChannel.send({ content: msg });
   }
 };
