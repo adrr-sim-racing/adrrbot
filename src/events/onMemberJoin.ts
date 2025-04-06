@@ -104,46 +104,56 @@ export const onMemberJoin = async (member: GuildMember) => {
 
   // TODO: Move this to a separate function
   if (!logChannel) {
-    logger.error(`Member activity channel ${Config.MEMBER_JOIN_CHANNEL} not found`);
+    logger.error(`Log channel ${Config.LOG_CHANNEL} not found`);
     return;
   }
   
   const userDataRequestURL = APIRequestUrls.getUser + member.id + '?attribute=discord';
+  logger.info(`Fetching nickname for ${member.user.tag} (${member.user.id})`);
+  let preferredName = '';
+  let userData;
+  try {
+    userData = await fetchData(userDataRequestURL, RequestOptions) as SimGridUser;
+    logger.info('userdata', userData);
+    preferredName = userData.preferred_name;
+  }
+  catch (error) {
+    const msg = `Failed to fetch nickname for ${member.user.tag} (${member.user.id}):`;
+    logger.error(msg, error);
+    await logChannel.send({ content: msg });
+    return;
+  }
+
+  const oldNickname = member.user.displayName;
 
   try {
-    const userData = await fetchData(userDataRequestURL, RequestOptions) as SimGridUser;
-    const preferredName = userData.preferred_name;
-    if (!preferredName) {
-      const msg = `No preferred name found for ${member.user.tag} (${member.id})`;
-      await logChannel.send({ content: msg });
-      logger.error(msg);
-      return;
-    }
-    const oldNickname = member.user.displayName;
     await member.setNickname(preferredName, 'Set nickname to SimGrid preferred name')
     .then(member => console.log(`Set nickname of ${member.user.username}`))
     .catch(console.error);
-
-    const userRenamedEmbed = new EmbedBuilder()
-      .setColor('#FFFF00')
-      .setTitle('Member nickname updated')
-      .setDescription(`**${oldNickname}** has been **renamed** to <@${member.id}>.`)
-      .addFields(
-        { name: 'SimGrid Preferred Name', value: preferredName, inline: true },
-        { name: 'Old Nickname', value: oldNickname, inline: true },
-        { name: 'SimGrid ID', value: `[${userData.user_id}](https://www.thesimgrid.com/drivers/${userData.user_id})`, inline: true },
-      )
-      .setAuthor({
-        name: oldNickname || 'Unknown Username',
-        iconURL: member.displayAvatarURL(),
-      })
-      .setTimestamp(new Date())
-      .setFooter({ text: `Member ID: ${member.user.id}` });
-  
-      await logChannel.send({ embeds: [userRenamedEmbed] });
-
-    logger.info(`Updated nickname for ${member.user.tag} (${member.user.id}) to ${preferredName}`);
   } catch (error) {
-    logger.error('Command setnick failed:', error);
+    const msg = `Failed to set nickname for ${member.user.tag} (${member.user.id}):`;
+    logger.error(msg, error);
+    await logChannel.send({ content: msg });
+    return;
   }
+
+  const userRenamedEmbed = new EmbedBuilder()
+  .setColor('#FFFF00')
+  .setTitle('Member nickname updated')
+  .setDescription(`**${oldNickname}** has been **renamed** to <@${member.id}>.`)
+  .addFields(
+    { name: 'SimGrid Preferred Name', value: preferredName, inline: true },
+    { name: 'Old Nickname', value: oldNickname, inline: true },
+    { name: 'SimGrid ID', value: `[${userData.user_id}](https://www.thesimgrid.com/drivers/${userData.user_id})`, inline: true },
+  )
+  .setAuthor({
+    name: oldNickname || 'Unknown Username',
+    iconURL: member.displayAvatarURL(),
+  })
+  .setTimestamp(new Date())
+  .setFooter({ text: `Member ID: ${member.user.id}` });
+
+  await logChannel.send({ embeds: [userRenamedEmbed] });
+
+  logger.info(`Updated nickname for ${member.user.tag} (${member.user.id}) to ${preferredName}`);
 };
