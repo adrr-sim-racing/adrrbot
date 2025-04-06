@@ -38,7 +38,11 @@ const postDailyRace: Command = {
         .setName('type')
         .setDescription('The type of race')
         .setRequired(true)
-        .addChoices({ name: 'Daily', value: 'daily' }, { name: 'USC', value: 'usc' })
+        .addChoices(
+          { name: 'Daily', value: 'daily' },
+          { name: 'USC', value: 'usc' },
+          { name: 'FOT', value: 'fot' },
+        )
     )
     .addStringOption((option) =>
       option.setName('id').setDescription('The id for the championship you wish to retrieve').setRequired(true)
@@ -97,16 +101,12 @@ const postDailyRace: Command = {
             value: `${data.url}`,
             inline: false,
           }
-        );
-      switch (championshipChoice) {
-        case 'usc':
-          championshipEmbed.setColor(ADRRColours.Secondary);
-          championshipEmbed.setThumbnail('https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/image/USCLogo.png');
-          break;
-        default:
-          championshipEmbed.setColor(ADRRColours.Primary);
-          break;
-      }
+        )
+        .setColor(Championships[championshipChoice as keyof typeof Championships].color)
+        if(championshipChoice === 'daily') {
+          championshipEmbed.setThumbnail(Championships[championshipChoice as keyof typeof Championships].thumbnailImage);
+        }
+
       data.races[0].results_available &&
         championshipEmbed.addFields({
           name: 'Results',
