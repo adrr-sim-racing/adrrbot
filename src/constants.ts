@@ -41,13 +41,26 @@ export const RequestOptions: RequestInit = {
   },
 };
 export const Championships = {
-  usc: "13642",
-  daily: "13931",
-}
+  usc: {
+    name: 'USC',
+    thumbnailImage: 'https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/image/USCLogo.png',
+    color: [235, 251, 72] as RGBTuple
+  },
+  fot:  {
+    name: 'FOT',
+    thumbnailImage: 'https://i.fmfile.com/Km44dzC3oIVfckiyEjRbl/FOT_Light.png',
+    color: [237, 37, 78] as RGBTuple,
+  },
+  daily: {
+    name: 'Daily',
+    thumbnailImage: null,
+    color: [237, 37, 78] as RGBTuple,
+  }
+};
 export const ADRRColours = {
   Primary: [235, 251, 72] as RGBTuple,
   Secondary: [237, 37, 78] as RGBTuple,
-}
+};
 export const ADRRColoursArray: RGBTuple[] = Object.values(ADRRColours);
 
 export const DailyRaceChannelID = "1349283376560865342";
