@@ -13,21 +13,6 @@ function formatDiscordTimestamp(isoString: string): string {
   return `<t:${timestamp}:F>`;
 }
 
-
-function getOrdinal(day: number): string {
-  if (day > 3 && day < 21) return day + 'th'; // Covers 4th to 20th
-  switch (day % 10) {
-    case 1:
-      return day + 'st';
-    case 2:
-      return day + 'nd';
-    case 3:
-      return day + 'rd';
-    default:
-      return day + 'th';
-  }
-}
-
 const postDailyRace: Command = {
   data: new SlashCommandBuilder()
     .setName('daily')
@@ -103,7 +88,7 @@ const postDailyRace: Command = {
           }
         )
         .setColor(Championships[championshipChoice as keyof typeof Championships].color)
-        if(championshipChoice === 'daily') {
+        if(championshipChoice !== 'daily') {
           championshipEmbed.setThumbnail(Championships[championshipChoice as keyof typeof Championships].thumbnailImage);
         }
 
@@ -126,7 +111,6 @@ const postDailyRace: Command = {
                       "url": `https://www.thesimgrid.com/user_championships/new?registerable_id=${data.id}&registerable_type=Championship`,
                   } as APIMessageActionRowComponent,
               ]
-  
           }
       ]
       });
