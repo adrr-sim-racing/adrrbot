@@ -13,10 +13,10 @@ function formatDiscordTimestamp(isoString: string): string {
   return `<t:${timestamp}:F>`;
 }
 
-const postDailyRace: Command = {
+const raceEvent: Command = {
   data: new SlashCommandBuilder()
-    .setName('daily')
-    .setDescription('Post a daily race announcement')
+    .setName('raceevent')
+    .setDescription('Post a race event announcement')
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
     .addStringOption((option) =>
       option
@@ -24,18 +24,25 @@ const postDailyRace: Command = {
         .setDescription('The type of race')
         .setRequired(true)
         .addChoices(
-          { name: 'Daily', value: 'daily' },
+          { name: 'Default', value: 'default' },
           { name: 'USC', value: 'usc' },
           { name: 'FOT', value: 'fot' },
         )
     )
     .addStringOption((option) =>
       option.setName('id').setDescription('The id for the championship you wish to retrieve').setRequired(true)
+    )
+    .addStringOption((option) =>
+      option.setName('password').setDescription('Server password required to join event').setRequired(false)
+    )
+    .addStringOption((option) =>
+      option.setName('notes').setDescription('Additional notes to include with the announcement').setRequired(false)
     ),
-
   run: async (interaction: ChatInputCommandInteraction) => {
     const championshipChoice = interaction.options.getString('type');
     const id = interaction.options.getString('id');
+    const eventPassword = interaction.options.getString('password');
+    const notes = interaction.options.getString('notes');
 
     const championshipId = id
       ? id
@@ -92,10 +99,22 @@ const postDailyRace: Command = {
           championshipEmbed.setThumbnail(Championships[championshipChoice as keyof typeof Championships].thumbnailImage);
         }
 
+      eventPassword !== "" &&
+        championshipEmbed.addFields({
+          name: 'Password',
+          value: `${eventPassword}`,
+        });
+
       data.races[0].results_available &&
         championshipEmbed.addFields({
           name: 'Results',
           value: `${data.results_url}`,
+        });
+
+      notes !== "" &&
+        championshipEmbed.addFields({
+          name: 'Event Notes',
+          value: `${notes}`,
         });
 
       await AnnounceChannel?.send({
@@ -121,4 +140,4 @@ const postDailyRace: Command = {
   },
 };
 
-export default postDailyRace;
+export default raceEvent;
