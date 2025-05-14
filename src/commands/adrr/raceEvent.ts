@@ -44,16 +44,10 @@ const raceEvent: Command = {
     const eventPassword = interaction.options.getString('password');
     const notes = interaction.options.getString('notes');
 
-    const championshipId = id
-      ? id
-      : championshipChoice && championshipChoice in Championships
-        ? Championships[championshipChoice as keyof typeof Championships]
-        : null;
-
     try {
       await interaction.deferReply({ ephemeral: true });
 
-      const getChampionshipURL = `${APIRequestUrls.getChampionship}${championshipId}`;
+      const getChampionshipURL = `${APIRequestUrls.getChampionship}${id}`;
       const data = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
 
       const getCarClassDataURL = getChampionshipURL + '/championship_car_classes';
@@ -98,11 +92,12 @@ const raceEvent: Command = {
           championshipEmbed.setThumbnail(Championships[championshipChoice as keyof typeof Championships].thumbnailImage);
         }
 
-      eventPassword !== "" &&
+      if(eventPassword) {
         championshipEmbed.addFields({
-          name: 'Password',
+          name: 'Server Password',
           value: `${eventPassword}`,
         });
+      }
 
       data.races[0].results_available &&
         championshipEmbed.addFields({
@@ -110,12 +105,12 @@ const raceEvent: Command = {
           value: `${data.results_url}`,
         });
 
-      notes !== "" &&
+      if(notes) {
         championshipEmbed.addFields({
           name: 'Event Notes',
           value: `${notes}`,
         });
-
+      }
       await AnnounceChannel?.send({
         embeds: [championshipEmbed],
         "components": [
