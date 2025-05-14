@@ -51,15 +51,15 @@ export const Championships = {
     thumbnailImage: 'https://i.fmfile.com/Km44dzC3oIVfckiyEjRbl/FOT_Light.png',
     color: [237, 37, 78] as RGBTuple,
   },
-  daily: {
-    name: 'Daily',
+  default: {
+    name: 'Default',
     thumbnailImage: null,
     color: [237, 37, 78] as RGBTuple,
   }
 };
 export const ADRRColours = {
-  Primary: [235, 251, 72] as RGBTuple,
-  Secondary: [237, 37, 78] as RGBTuple,
+  Primary: [235, 251, 72] as RGBTuple,  // ADRR Yellow
+  Secondary: [237, 37, 78] as RGBTuple,  // USC Red
 };
 export const ADRRColoursArray: RGBTuple[] = Object.values(ADRRColours);
 

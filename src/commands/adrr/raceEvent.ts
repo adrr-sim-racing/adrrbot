@@ -70,7 +70,6 @@ const raceEvent: Command = {
 
       const championshipEmbed = new EmbedBuilder()
         .setTitle(`${data.name}`)
-        .setDescription(`${championshipChoice == 'daily' ? '🟩 Open Lobby / No sign up required\n' : ''}`)
         .setURL(`${data.url}`)
         .setAuthor({
           name: 'ADRR.net',
@@ -95,7 +94,7 @@ const raceEvent: Command = {
           }
         )
         .setColor(Championships[championshipChoice as keyof typeof Championships].color)
-        if(championshipChoice !== 'daily') {
+        if(championshipChoice !== 'default') {
           championshipEmbed.setThumbnail(Championships[championshipChoice as keyof typeof Championships].thumbnailImage);
         }
 
