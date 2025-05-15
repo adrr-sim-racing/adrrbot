@@ -76,7 +76,7 @@ export async function warnUser(
   }
 }
 
-async function sendWarningDM(user: User, reason: string, timeoutDuration: number | null, isAutomatic: boolean = false) {
+async function sendWarningDM(user: User, reason: string, isAutomatic: boolean = false) {
   const warningType = isAutomatic ? 'Automatic warning' : 'Warning';
   let dmMessage = `${warningType}: ${reason}`;
 
