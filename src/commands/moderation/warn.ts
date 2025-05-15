@@ -24,7 +24,6 @@ export async function warnUser(
   success: boolean;
   warnId?: number;
   error?: string;
-  timeoutDuration?: number;
 }> {
   try {
     const targetUser = await prisma.user.upsert({
@@ -42,23 +41,11 @@ export async function warnUser(
       },
     });
 
-    const timeoutDuration = calculateTimeoutDuration(targetUser.warns);
-    const currentTimeoutEnd = member.communicationDisabledUntilTimestamp;
-
-    let combinedTimeoutDuration = timeoutDuration;
-    if (currentTimeoutEnd && currentTimeoutEnd > Date.now()) {
-      const remainingTime = currentTimeoutEnd - Date.now();
-      combinedTimeoutDuration += remainingTime;
-    }
-
-    await member.timeout(combinedTimeoutDuration, `Accumulated Warns: ${targetUser.warns}`);
-
     await handleMemberWarn(
       member.user,
       issuer.user,
       reason,
       targetUser.warns,
-      combinedTimeoutDuration,
       member.guild,
       id
     );
@@ -68,7 +55,6 @@ export async function warnUser(
     return {
       success: true,
       warnId: id,
-      timeoutDuration: combinedTimeoutDuration,
     };
   } catch (error) {
     logger.error('Error processing warning:', error);
@@ -94,10 +80,6 @@ async function sendWarningDM(user: User, reason: string, timeoutDuration: number
   const warningType = isAutomatic ? 'Automatic warning' : 'Warning';
   let dmMessage = `${warningType}: ${reason}`;
 
-  if (timeoutDuration !== null) {
-    dmMessage += `\nYou have been placed in timeout for ${timeoutDuration / 60000} minutes due to accumulated warnings.`;
-  }
-
   if (isAutomatic) {
     dmMessage +=
       '\n\nThis warning was automatically issued by our risk detection system. If you believe this was a mistake, please contact the moderators.';
@@ -111,27 +93,6 @@ async function sendWarningDM(user: User, reason: string, timeoutDuration: number
     logger.error('Failed to send warning DM:', err);
     return false;
   }
-}
-
-function calculateTimeoutDuration(warnCount: number): number {
-  let minutes;
-
-  switch (warnCount) {
-    case 1:
-      minutes = 5;
-      break;
-    case 2:
-      minutes = 10;
-      break;
-    case 3:
-      minutes = 60;
-      break;
-    default:
-      minutes = 24 * 60;
-      break;
-  }
-
-  return minutes * 60000;
 }
 
 const Warn: Command = {
@@ -169,9 +130,6 @@ const Warn: Command = {
       const channel = interaction.channel as TextChannel;
       if (result.success) {
         await channel?.send(`<@${userOption.id}> has been warned. Reason: ${reasonOption}`);
-        await interaction.editReply(
-          `Successfully warned <@${userOption.id}>. User is timed out for ${result.timeoutDuration! / 60000} minutes.`
-        );
       } else {
         await interaction.editReply({ content: result.error });
       }

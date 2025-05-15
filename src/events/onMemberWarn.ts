@@ -7,7 +7,6 @@ export async function handleMemberWarn(
   issuer: User,
   reason: string,
   warnCount: number,
-  timeoutDuration: number | null,
   guild: Guild,
   warnId: number
 ) {
@@ -26,11 +25,6 @@ export async function handleMemberWarn(
       })
       .setTimestamp(new Date())
       .setFooter({ text: `Member ID: ${warnedUser.id}` });
-
-    if (timeoutDuration !== null) {
-      const durationText = `${timeoutDuration / 60000} minutes`;
-      warnEmbed.addFields({ name: 'Timeout Duration', value: durationText, inline: true });
-    }
 
     const channel = guild.channels.cache.get(Config.LOG_CHANNEL) as TextChannel;
     if (!channel) {
