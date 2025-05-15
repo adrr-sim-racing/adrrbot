@@ -50,7 +50,7 @@ export async function warnUser(
       id
     );
 
-    await sendWarningDM(member.user, reason, combinedTimeoutDuration, isAutomatic);
+    await sendWarningDM(member.user, reason, isAutomatic);
 
     return {
       success: true,
