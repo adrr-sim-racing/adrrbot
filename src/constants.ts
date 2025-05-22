@@ -44,17 +44,17 @@ export const Championships = {
   usc: {
     name: 'USC',
     thumbnailImage: 'https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/image/USCLogo.png',
-    color: [235, 251, 72] as RGBTuple
+    color: [237, 37, 78] as RGBTuple, // USC Red
   },
   fot:  {
     name: 'FOT',
     thumbnailImage: 'https://i.fmfile.com/Km44dzC3oIVfckiyEjRbl/FOT_Light.png',
-    color: [237, 37, 78] as RGBTuple,
+    color: [235, 251, 72] as RGBTuple,  // ADRR Yellow
   },
   default: {
     name: 'Default',
     thumbnailImage: null,
-    color: [237, 37, 78] as RGBTuple,
+    color: [235, 251, 72] as RGBTuple,  // ADRR Yellow
   }
 };
 export const ADRRColours = {
