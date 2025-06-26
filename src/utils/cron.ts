@@ -5,7 +5,7 @@ import Config from '../config';
 export async function cleanUpNewMemberRoles(client: Client) {
   console.log(`[${new Date().toISOString()}] Starting cleanup job...`);
 
-  const guild = client.guilds.cache.get('YOUR_GUILD_ID');
+  const guild = client.guilds.cache.get(Config.GUILD_ID);
   if (!guild) {
     console.log('Guild not found, aborting cleanup');
     return;
