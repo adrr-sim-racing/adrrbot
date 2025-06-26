@@ -62,26 +62,30 @@ export const onMemberJoin = async (member: GuildMember) => {
     );
   }
 
-  const role = member.guild.roles.cache.get(Config.MEMBER_ROLE_ID);
+  const roles = [
+    member.guild.roles.cache.get(Config.MEMBER_ROLE_ID),
+    member.guild.roles.cache.get(Config.NEW_MEMBER_ROLE_ID),
+  ];
+  for (const role of roles) {
+    if (!role) {
+      logger.error(`Member role not found: ${Config.MEMBER_ROLE_ID}`);
+      return;
+    }
 
-  if (!role) {
-    logger.error(`Member role not found: ${Config.MEMBER_ROLE_ID}`);
-    return;
-  }
+    let retries = 0;
+    while (retries < MAX_RETRIES) {
+      try {
+        await member.roles.add(role);
+        logger.info(`Assigned role '${role.name}' to ${member.displayName}`);
+        break;
+      } catch (error) {
+        logger.error(`Failed to assign role to ${member.displayName} (Attempt ${retries + 1}/${MAX_RETRIES}):`, error);
+        retries++;
 
-  let retries = 0;
-  while (retries < MAX_RETRIES) {
-    try {
-      await member.roles.add(role);
-      logger.info(`Assigned role '${role.name}' to ${member.displayName}`);
-      break;
-    } catch (error) {
-      logger.error(`Failed to assign role to ${member.displayName} (Attempt ${retries + 1}/${MAX_RETRIES}):`, error);
-      retries++;
-
-      if (retries < MAX_RETRIES) {
-        logger.info(`Waiting ${RETRY_DELAY / 1000} seconds before retrying role assignment...`);
-        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
+        if (retries < MAX_RETRIES) {
+          logger.info(`Waiting ${RETRY_DELAY / 1000} seconds before retrying role assignment...`);
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
+        }
       }
     }
   }
