@@ -3,6 +3,7 @@ import commands from '../handlers/commandHandler';
 import Config from '../config';
 import logger from '../utils/logger';
 import { Command } from '../interfaces/command';
+import { cleanUpNewMemberRoles } from '../utils/cron';
 
 function organizeCommandsByCategory(commands: Map<string, Command>) {
   const categorizedCommands = new Map<string, string[]>();
@@ -73,6 +74,25 @@ export const onReady = async (Bot: Client) => {
       activities: [{ name: 'https://adrr.net/', type: ActivityType.Custom }],
       status: 'online',
     });
+
+    // Run cleanup once immediately
+    try {
+      await cleanUpNewMemberRoles(Bot);
+      logger.info('Initial cleanup job completed successfully');
+    } catch (error) {
+      logger.error('Initial cleanup job failed:', error);
+    }
+
+    // Schedule cleanup every hour
+    setInterval(async () => {
+      try {
+        await cleanUpNewMemberRoles(Bot);
+        logger.info('Scheduled cleanup job completed successfully');
+      } catch (error) {
+        logger.error('Scheduled cleanup job failed:', error);
+      }
+    }, 1000 * 60 * 60); // every hour (adjust interval as needed)
+
   } catch (error) {
     logger.error('Failed to register commands:', error);
     if (error instanceof Error) {
