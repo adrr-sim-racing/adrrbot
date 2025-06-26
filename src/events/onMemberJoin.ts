@@ -110,6 +110,7 @@ export const onMemberJoin = async (member: GuildMember) => {
   
   const userDataRequestURL = APIRequestUrls.getUser + member.id + '?attribute=discord';
   logger.info(`Fetching nickname for ${member.user.tag} (${member.user.id})`);
+  const oldNickname = member.user.displayName;
   let preferredName = '';
   let userData;
   try {
@@ -124,7 +125,10 @@ export const onMemberJoin = async (member: GuildMember) => {
     return;
   }
 
-  const oldNickname = member.user.displayName;
+  if (preferredName === oldNickname) {
+    logger.info(`Nickname for ${member.user.tag} (${member.user.id}) already set to ${preferredName}`);
+    return;
+  }
 
   try {
     await member.setNickname(preferredName, 'Set nickname to SimGrid preferred name')
