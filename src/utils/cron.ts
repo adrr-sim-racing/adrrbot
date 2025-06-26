@@ -20,7 +20,9 @@ export async function cleanUpNewMemberRoles(client: Client) {
   const prisma = new PrismaClient();
 
   // Threshold date 7 days ago in milliseconds since epoch
-  const thresholdMs = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  // const thresholdMs = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  // 1 minute ago in milliseconds
+  const thresholdMs = Date.now() - 1 * 60 * 1000; 
 
   const usersToClean = await prisma.user.findMany({
     where: {
