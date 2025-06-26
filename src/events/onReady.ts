@@ -91,7 +91,7 @@ export const onReady = async (Bot: Client) => {
       } catch (error) {
         logger.error('Scheduled cleanup job failed:', error);
       }
-    }, 1000 * 60 * 60); // every hour (adjust interval as needed)
+    }, 1000 * 30); // every 30s
 
   } catch (error) {
     logger.error('Failed to register commands:', error);
