@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'; // or wherever you import it
+import { PrismaClient } from '@prisma/client';
 import { Client } from 'discord.js';
 import Config from '../config';
 
@@ -19,20 +19,25 @@ export async function cleanUpNewMemberRoles(client: Client) {
 
   const prisma = new PrismaClient();
 
-  // For testing: 10 seconds ago
-  const thresholdDate = new Date(Date.now() - 10 * 1000);
+  // Threshold date 7 days ago in milliseconds since epoch
+  const thresholdMs = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
   const usersToClean = await prisma.user.findMany({
     where: {
+      // joinedAt stored as bigint (milliseconds), so compare to thresholdMs number
       joinedAt: {
-        lt: thresholdDate,
+        lt: new Date(thresholdMs),  // Prisma expects Date, but DB stores bigint
       },
     },
   });
 
-  console.log(`Found ${usersToClean.length} users to clean`);
+  const rawUsersToClean = await prisma.$queryRaw<
+    { id: string }[]
+  >`SELECT id FROM User WHERE joinedAt < ${thresholdMs}`;
 
-  for (const user of usersToClean) {
+  console.log(`Found ${rawUsersToClean.length} users to clean`);
+
+  for (const user of rawUsersToClean) {
     const member = await guild.members.fetch(user.id).catch(() => null);
     if (!member) {
       console.log(`Could not fetch member with ID ${user.id}`);
@@ -51,4 +56,3 @@ export async function cleanUpNewMemberRoles(client: Client) {
 
   console.log(`[${new Date().toISOString()}] Cleanup job completed`);
 }
-
