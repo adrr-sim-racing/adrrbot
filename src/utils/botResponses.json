@@ -1,11 +1,17 @@
 {
   "guidelineResponses": {
     "general": [
-      "\"I take no responsibility for dickheads crashing you in an open lobby...\" -  *Steve Worrell*"
+      { "text": "\"I take no responsibility for dickheads crashing you in an open lobby...\" -  *Steve Worrell*", "file": "https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/image/steve.png" }
     ]
   },
   "cooldownResponses": [
-    "Safety car deployed... brb!",
-    "Okay, that's three times... I think you might be the problem...?"
+    { "text": "Safety car deployed... brb!" },
+    { "text": "Okay, that's three times... I think you might be the problem...?" }
+  ],
+  "addrResponses": [
+    { "text": "Another one! One of us! One of Us! One of Us!" },
+    { "text": "ADDR? What's that?" },
+    { "text": "I'm not sure what ADDR is, but I'm pretty sure it's not a thing." },
+    { "text": "I do believe it's spelt ADRR", "file": "https://tenor.com/view/actually-gif-20569320" }
   ]
 }

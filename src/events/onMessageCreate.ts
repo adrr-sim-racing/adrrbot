@@ -1,7 +1,7 @@
-import { Message, EmbedBuilder, TextChannel, AttachmentBuilder } from 'discord.js';
+import { Message, EmbedBuilder, TextChannel, AttachmentBuilder, MessageReplyOptions } from 'discord.js';
 import { ignoredRoles, whitelistedChannels } from '../constants';
-import { positivePatterns } from '../utils/patterns';
-import { guidelineResponses, cooldownResponses } from '../handlers/botResponsesHandler';
+import { positivePatterns, addrPatterns } from '../utils/patterns';
+import { guidelineResponses, cooldownResponses, addrResponses } from '../handlers/botResponsesHandler';
 import { Bot } from '..';
 import Config from '../config';
 
@@ -38,22 +38,31 @@ export const onMessageCreate = async (message: Message) => {
   }
 
   const isPositiveMatch = positivePatterns.some((pattern) => pattern.test(lowerCaseMessage));
+  const isAddrMatch = addrPatterns.some((pattern) => pattern.test(lowerCaseMessage));
 
-  if (isPositiveMatch) {
+  if (isPositiveMatch || isAddrMatch) {
     if (userData.messageCount < 2) {
-      const responseArray = guidelineResponses['general'];
+      const responseArray = isPositiveMatch ? guidelineResponses['general'] : addrResponses;
       const randomResponse = responseArray[Math.floor(Math.random() * responseArray.length)];
-      const file = new AttachmentBuilder('https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/image/steve.png');
-      await message.reply({ content: randomResponse, files: [file] });
+
+      const replyPayload: MessageReplyOptions = { content: randomResponse.text };
+      if (randomResponse.file) {
+        replyPayload.files = [new AttachmentBuilder(randomResponse.file)];
+      }
+
+      await message.reply(replyPayload);
+
       lastGlobalResponseTime = now;
       userData.messageCount++;
       console.log(userId, userData.messageCount);
     } else {
       const randomCooldownResponse = cooldownResponses[Math.floor(Math.random() * cooldownResponses.length)];
-      await message.reply(randomCooldownResponse);
+      await message.reply(randomCooldownResponse.text);
+
       userData.lastResponseTime = now;
       userData.messageCount = 0;
       userData.sentLogMessage = true;
+
       sendCooldownLog(message, userData.lastResponseTime);
     }
   }
