@@ -1,8 +1,11 @@
-import { Guild, GuildAuditLogsEntry, EmbedBuilder, TextChannel, AuditLogEvent, Role } from 'discord.js';
+import { Guild, GuildMember, GuildAuditLogsEntry, EmbedBuilder, TextChannel, AuditLogEvent } from 'discord.js';
 import Config from '../config';
 import logger from '../utils/logger';
+import fetchData from '../handlers/apiHandler';
+import { SimGridUser } from '../interfaces/simgrid';
+import { APIRequestUrls, RequestOptions } from '../constants';
 
-export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, guild: Guild) => {
+export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, guild: Guild, member: GuildMember) => {
   if (auditLogEntry.action !== AuditLogEvent.MemberRoleUpdate) {
     return;
   }
@@ -11,7 +14,7 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
     return logger.info('Executor ID or target ID is missing from the audit log entry.');
   }
 
-  if (auditLogEntry.executorId !== '874059310869655662') return; // Only trigger if it's VVarden
+  if (auditLogEntry.executorId !== '709674172493594674') return; // Only trigger if it's SimGrid
 
   logger.info(`Fetching member: ${auditLogEntry.targetId}`);
 
@@ -23,18 +26,67 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
   }
 
   if (!targetUser) {
-    return logger.info('Unable to find targetUser following MemberRoleUpdate triggering by VVarden');
+    return logger.info('Unable to find targetUser following MemberRoleUpdate triggering by SimGrid');
   }
 
-  if (targetUser.roles.cache.has(Config.MEMBER_ROLE_ID)) return; // Member still has the role, no further action required
+  // TODO: Move this to a separate function
+  const logChannel = member.guild.channels.cache.get(Config.LOG_CHANNEL) as TextChannel;
+
+  if (!logChannel) {
+    logger.error(`Log channel ${Config.LOG_CHANNEL} not found`);
+    return;
+  }
+  
+  const userDataRequestURL = APIRequestUrls.getUser + member.id + '?attribute=discord';
+  logger.info(`Fetching nickname for ${member.user.tag} (${member.user.id})`);
+  const oldNickname = member.user.displayName;
+  let preferredName = '';
+  let userData;
+  try {
+    userData = await fetchData(userDataRequestURL, RequestOptions) as SimGridUser;
+    logger.info('userdata', userData);
+    preferredName = userData.preferred_name;
+  }
+  catch (error) {
+    const msg = `Failed to fetch nickname for ${member.user.tag} (${member.user.id}):`;
+    logger.error(msg, error);
+    await logChannel.send({ content: msg });
+    return;
+  }
+
+  if (preferredName === oldNickname) {
+    logger.info(`Nickname for ${member.user.tag} (${member.user.id}) already set to ${preferredName}`);
+    return;
+  }
 
   try {
-    await targetUser.roles.add(Config.MEMBER_ROLE_ID);
-    logger.info(
-      `${targetUser.user.username} was unblacklisted by VVarden and lost the default member role, role has been returned.`
-    );
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.error(`Failed to add role to ${targetUser.user.username}: ${errorMessage}`);
+    await member.setNickname(preferredName, 'Set nickname to SimGrid preferred name')
+    .then(member => logger.info(`Set nickname of ${member.user.username}`))
+    .catch(console.error);
+  } catch (error) {
+    const msg = `Failed to set nickname for ${member.user.tag} (${member.user.id}):`;
+    logger.error(msg, error);
+    await logChannel.send({ content: msg });
+    return;
   }
+
+  const userRenamedEmbed = new EmbedBuilder()
+  .setColor('#FFFF00')
+  .setTitle('Member nickname updated')
+  .setDescription(`**${oldNickname}** has been **renamed** to <@${member.id}>.`)
+  .addFields(
+    { name: 'SimGrid Preferred Name', value: preferredName, inline: true },
+    { name: 'Old Nickname', value: oldNickname, inline: true },
+    { name: 'SimGrid ID', value: `[${userData.user_id}](https://www.thesimgrid.com/drivers/${userData.user_id})`, inline: true },
+  )
+  .setAuthor({
+    name: oldNickname || 'Unknown Username',
+    iconURL: member.displayAvatarURL(),
+  })
+  .setTimestamp(new Date())
+  .setFooter({ text: `Member ID: ${member.user.id}` });
+
+  await logChannel.send({ embeds: [userRenamedEmbed] });
+
+  logger.info(`Updated nickname for ${member.user.tag} (${member.user.id}) to ${preferredName}`);
 };
