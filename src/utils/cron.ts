@@ -3,17 +3,17 @@ import { Client } from 'discord.js';
 import Config from '../config';
 
 export async function cleanUpNewMemberRoles(client: Client) {
-  console.log(`[${new Date().toISOString()}] Starting cleanup job...`);
+  //console.log(`[${new Date().toISOString()}] Starting cleanup job...`);
 
   const guild = client.guilds.cache.get(Config.GUILD_ID);
   if (!guild) {
-    console.log('Guild not found, aborting cleanup');
+    //console.log('Guild not found, aborting cleanup');
     return;
   }
 
   const newMemberRole = guild.roles.cache.get(Config.NEW_MEMBER_ROLE_ID);
   if (!newMemberRole) {
-    console.log('New member role not found, aborting cleanup');
+    //console.log('New member role not found, aborting cleanup');
     return;
   }
 
@@ -35,24 +35,24 @@ export async function cleanUpNewMemberRoles(client: Client) {
     { id: string }[]
   >`SELECT id FROM User WHERE joinedAt < ${thresholdMs}`;
 
-  console.log(`Found ${rawUsersToClean.length} users to clean`);
+  //console.log(`Found ${rawUsersToClean.length} users to clean`);
 
   for (const user of rawUsersToClean) {
     const member = await guild.members.fetch(user.id).catch(() => null);
     if (!member) {
-      console.log(`Could not fetch member with ID ${user.id}`);
+      //console.log(`Could not fetch member with ID ${user.id}`);
       continue;
     }
 
     if (member.roles.cache.has(newMemberRole.id)) {
       await member.roles.remove(newMemberRole);
-      console.log(`Removed 'New member' role from ${member.user.tag}`);
+      //console.log(`Removed 'New member' role from ${member.user.tag}`);
     } else {
-      console.log(`Member ${member.user.tag} does not have the 'New member' role`);
+      //console.log(`Member ${member.user.tag} does not have the 'New member' role`);
     }
   }
 
   await prisma.$disconnect();
 
-  console.log(`[${new Date().toISOString()}] Cleanup job completed`);
+  //console.log(`[${new Date().toISOString()}] Cleanup job completed`);
 }
