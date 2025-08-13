@@ -93,6 +93,7 @@ export const whitelistedChannels = [
 // channel IDs for botResponsesHandler.ts
 export const ChannelIDs = {
   general: '1340659416860721174', // adrr general channel
+  offtopic: '1359237075068780769', // adrr off-topic channel
   usercontent: '1340659416860721175', // adrr user content channel
-  test: '1353837446630084699', // adrr test channel
+  liveries: '1385943791940403280', // adrr liveries channel
 };
