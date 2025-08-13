@@ -1,4 +1,4 @@
-import { Guild, GuildMember, GuildAuditLogsEntry, EmbedBuilder, TextChannel, AuditLogEvent } from 'discord.js';
+import { Guild, GuildAuditLogsEntry, EmbedBuilder, TextChannel, AuditLogEvent } from 'discord.js';
 import Config from '../config';
 import logger from '../utils/logger';
 import fetchData from '../handlers/apiHandler';
@@ -7,6 +7,12 @@ import { APIRequestUrls, RequestOptions } from '../constants';
 
 export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, guild: Guild) => {
   if (auditLogEntry.action !== AuditLogEvent.MemberRoleUpdate) {
+    return;
+  }
+
+  const roleAdded = auditLogEntry.changes?.some(change => change.key === '$add');
+  if (!roleAdded) {
+    logger.info('Role was removed or no roles were added — skipping.');
     return;
   }
 
