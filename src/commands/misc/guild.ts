@@ -12,7 +12,7 @@ const Guild: Command = {
         .setRequired(true)
         .addChoices(
           { name: 'SimGrid', value: 'simgrid' },
-          { name: 'VMS', value: 'vms' },
+          { name: 'Coach Dave Academy', value: 'coachdave' },
         )
     ),
 
@@ -23,8 +23,8 @@ const Guild: Command = {
       case 'simgrid':
         await interaction.reply('https://discord.gg/XFTt9bHYhV');
         break;
-      case 'vms':
-        await interaction.reply('https://discord.gg/gVyNTTAUEW');
+      case 'coachdave':
+        await interaction.reply('https://discord.gg/YDpGMpW9');
         break;
     }
   },
