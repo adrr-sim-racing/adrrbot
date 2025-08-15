@@ -2,7 +2,7 @@ import { EmbedBuilder, TextChannel, ChatInputCommandInteraction, SlashCommandBui
 import { Bot } from '../..';
 import { Command } from '../../interfaces/command';
 import { ChampionshipData, ChampionshipCarClass } from '../../interfaces/simgrid';
-import { ADRRColours, APIRequestUrls, Championships, DailyRaceChannelID, RequestOptions } from '../../constants';
+import { APIRequestUrls, Championships, DailyRaceChannelID, RequestOptions } from '../../constants';
 import fetchData from '../../handlers/apiHandler';
 
 
@@ -27,6 +27,7 @@ const raceEvent: Command = {
           { name: 'Default', value: 'default' },
           { name: 'USC', value: 'usc' },
           { name: 'FOT', value: 'fot' },
+          { name: 'OTC', value: 'otc' },
         )
     )
     .addStringOption((option) =>

@@ -51,6 +51,11 @@ export const Championships = {
     thumbnailImage: 'https://i.fmfile.com/Km44dzC3oIVfckiyEjRbl/FOT_Light.png',
     color: [235, 251, 72] as RGBTuple,  // ADRR Yellow
   },
+  otc: {
+    name: 'OTC',
+    thumbnailImage: 'https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/OTCBadge-p-500.webp',
+    color: [48, 133, 252] as RGBTuple,  // OTC Blue
+  },
   default: {
     name: 'Default',
     thumbnailImage: null,
