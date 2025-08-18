@@ -45,7 +45,7 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
   
   const userDataRequestURL = APIRequestUrls.getUser + targetUser.id + '?attribute=discord';
   logger.info(`Fetching nickname for ${targetUser.user.tag} (${targetUser.user.id})`);
-  const oldNickname = targetUser.user.displayName;
+  const oldNickname = targetUser.nickname || targetUser.user.displayName;
   let preferredName = '';
   let userData;
   try {
