@@ -1,30 +1,10 @@
 import { RGBTuple } from "discord.js";
 import Config from './config';
 
-export const GithubUrl = 'https://github.com/overextended';
-export const GithubApi = 'https://api.github.com/repos/overextended';
-export const DocsUrl = 'https://overextended.dev';
+export const GithubUrl = 'https://github.com/adrr-simracing';
+export const GithubApi = 'https://api.github.com/repos/adrr-simracing';
 export const WebsiteUrl = 'https://adrr.net';
-export const Resources = [
-  'ox_lib',
-  'ox_inventory',
-  'oxmysql',
-  'ox_core',
-  'ox_fuel',
-  'ox_target',
-  'ox_doorlock',
-  'ox_types',
-  'ox_mdt',
-  'cfxlua-vscode',
-  'ox_vehicledealer',
-  'ox_banking',
-  'ox_appearance',
-  'ox_police',
-  'ox_commands',
-  'OxBot',
-  'fivem-typescript-boilerplate',
-  'fivem-lls-addon',
-];
+
 export const APIRequestUrls = {
   baseURL: "https://www.thesimgrid.com/api/v1",
   getChampionship: "https://www.thesimgrid.com/api/v1/championships/",
@@ -69,16 +49,6 @@ export const ADRRColours = {
 export const ADRRColoursArray: RGBTuple[] = Object.values(ADRRColours);
 
 export const DailyRaceChannelID = "1349283376560865342";
-
-export const ResourceChoices = (() => {
-  const arr: { name: string; value: string }[] = new Array(Resources.length);
-
-  Resources.forEach((value, index) => {
-    arr[index] = { name: value, value: value };
-  });
-
-  return arr;
-})();
 
 // ignored role IDs for onMessageCreate.ts
 export const ignoredRoles = [
