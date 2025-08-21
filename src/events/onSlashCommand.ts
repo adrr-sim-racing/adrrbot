@@ -7,7 +7,6 @@ const commandWhitelist = new Set([
   'guild',
   'whois',
   'warn',
-  'daily',
 ]);
 
 function getChannelMention(channel: TextChannel | null) {
