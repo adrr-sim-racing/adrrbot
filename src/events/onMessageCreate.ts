@@ -4,7 +4,7 @@ import { positivePatterns, addrPatterns } from '../utils/patterns';
 import { guidelineResponses, cooldownResponses, addrResponses } from '../handlers/botResponsesHandler';
 import { Bot } from '..';
 import Config from '../config';
-import logger from '../../utils/logger';
+import logger from '../utils/logger';
 
 interface UserCooldownData {
   lastResponseTime: number;
