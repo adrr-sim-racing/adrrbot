@@ -37,16 +37,16 @@ const setUserNick: Command = {
     }
 
     const userDataRequestURL = APIRequestUrls.getUser + targetMember.id + '?attribute=discord';
-    console.log(userDataRequestURL);
+    logger.info(`Request URL: ${userDataRequestURL}`);
 
     try {
       const userData = await fetchData(userDataRequestURL, RequestOptions) as SimGridUser;
-      console.log(userData);
-      console.log(userData.preferred_name);
+      logger.info(`User data: ${userData}`);
+      logger.info(`Preferred name: ${userData.preferred_name}`);
       const preferredName = userData.preferred_name;
       await targetMember.setNickname(preferredName, 'Set nickname to SimGrid preferred name')
       // targetMember.setNickname('cool nickname', 'Needed a new nickname')
-      .then(member => console.log(`Set nickname of ${member.user.username}`))
+      .then(member => logger.info(`Set nickname of ${member.user.username}`))
       .catch(console.error);
       await interaction.editReply(`Updated nickname for ${targetMember.user.tag} to ${preferredName}`);
       logger.info(`Updated nickname for ${targetMember.user.tag} (${targetMember.id}) to ${preferredName}`);

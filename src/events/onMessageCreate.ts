@@ -4,6 +4,7 @@ import { positivePatterns, addrPatterns } from '../utils/patterns';
 import { guidelineResponses, cooldownResponses, addrResponses } from '../handlers/botResponsesHandler';
 import { Bot } from '..';
 import Config from '../config';
+import logger from '../../utils/logger';
 
 interface UserCooldownData {
   lastResponseTime: number;
@@ -54,7 +55,7 @@ export const onMessageCreate = async (message: Message) => {
 
       lastGlobalResponseTime = now;
       userData.messageCount++;
-      console.log(userId, userData.messageCount);
+      logger.info(userId, userData.messageCount);
     } else {
       const randomCooldownResponse = cooldownResponses[Math.floor(Math.random() * cooldownResponses.length)];
       await message.reply(randomCooldownResponse.text);
