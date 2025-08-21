@@ -14,11 +14,11 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 RUN npx prisma generate
-RUN ls -l /app/prisma
-RUN cat /app/prisma/schema.prisma
-RUN echo "Running prisma migrate deploy"
-RUN npx prisma migrate deploy
-RUN echo "prisma migrate deploy complete"
+# RUN ls -l /app/prisma
+# RUN cat /app/prisma/schema.prisma
+# RUN echo "Running prisma migrate deploy"
+# RUN npx prisma migrate deploy
+# RUN echo "prisma migrate deploy complete"
 
 RUN pnpm build
 
@@ -26,4 +26,4 @@ RUN pnpm build
 # RUN chown -R adrrbot:adrrbot /app/prisma
 # USER adrrbot
 
-CMD [ "pnpm", "start:production" ]
+CMD ["sh", "-c", "npx prisma migrate deploy && pnpm start:production"]
