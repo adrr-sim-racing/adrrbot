@@ -4,7 +4,7 @@ import { Command } from '../../interfaces/command';
 import { ChampionshipData, ChampionshipCarClass } from '../../interfaces/simgrid';
 import { APIRequestUrls, Championships, DailyRaceChannelID, RequestOptions } from '../../constants';
 import fetchData from '../../handlers/apiHandler';
-
+import logger from '../../utils/logger';
 
 function formatDiscordTimestamp(isoString: string): string {
   const date = new Date(isoString);
@@ -129,7 +129,7 @@ const raceEvent: Command = {
       ]
       });
     } catch (error) {
-      console.error('Error fetching championship data:', error);
+      logger.error('Error fetching championship data:', error);
       await interaction.editReply('Failed to retrieve championship data. Please try again later.');
     }
   },

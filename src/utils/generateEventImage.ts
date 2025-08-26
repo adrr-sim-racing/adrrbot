@@ -1,25 +1,34 @@
 import { createCanvas, loadImage, GlobalFonts, Image } from '@napi-rs/canvas';
 import { EventData } from '../interfaces/eventImage';
+import { readFileSync } from 'fs';
 import path from 'path';
 
 let fontRegistered = false;
+const fontPath = path.join(process.cwd(), 'assets/fonts/urw-din-black.ttf');
+const adrrLogoPath = path.join(process.cwd(), 'assets/images/ADRR.png');
 
 // Helper function to recolor a PNG image.
 async function recolorImage(imagePath: string, targetColor: string): Promise<Image> {
-  const img = await loadImage(imagePath);
-  const tempCanvas = createCanvas(img.width, img.height);
-  const tempCtx = tempCanvas.getContext('2d');
+  try {
+    const imgBuffer = readFileSync(imagePath);
+    const img = await loadImage(imgBuffer);
+    const tempCanvas = createCanvas(img.width, img.height);
+    const tempCtx = tempCanvas.getContext('2d');
 
-  tempCtx.drawImage(img, 0, 0);
-  tempCtx.globalCompositeOperation = 'source-in';
-  tempCtx.fillStyle = targetColor;
-  tempCtx.fillRect(0, 0, img.width, img.height);
-  tempCtx.globalCompositeOperation = 'source-over';
+    tempCtx.drawImage(img, 0, 0);
+    tempCtx.globalCompositeOperation = 'source-in';
+    tempCtx.fillStyle = targetColor;
+    tempCtx.fillRect(0, 0, img.width, img.height);
+    tempCtx.globalCompositeOperation = 'source-over';
 
-  const recoloredImg = new Image();
-  const buffer = tempCanvas.toBuffer('image/png');
-  recoloredImg.src = new Uint8Array(buffer);
-  return recoloredImg;
+    const recoloredImg = new Image();
+    const buffer = tempCanvas.toBuffer('image/png');
+    recoloredImg.src = new Uint8Array(buffer);
+    return recoloredImg;
+  } catch (error) {
+    console.error('Error recoloring image:', error);
+    throw error;
+  }
 }
 
 // Function to create a rounded rectangle path.
@@ -64,33 +73,37 @@ function drawDiagonalBorder(ctx: any, width: number, height: number, stripeSize:
 export async function generateEventImage(data: EventData): Promise<Buffer> {
   // Register font once
   if (!fontRegistered) {
-    GlobalFonts.registerFromPath(path.join(__dirname, 'src/assets/fonts/urw-din-black.ttf'), 'URW DIN');
+    GlobalFonts.registerFromPath(fontPath, 'URW DIN');
     fontRegistered = true;
   }
-
   const width = 800;
   const height = 450;
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext('2d');
 
-  const { title, seasonRound, date, classes, colour, imagePath } = data; // 1. Draw the diagonal border
-
-  drawDiagonalBorder(ctx, width, height, 50, ['#1a1a1a', colour]); // 2. Draw the inner white rectangle
-
+  const { title, seasonRound, date, classes, colour, imagePath } = data;
+  
+  // 1. Draw the diagonal border
+  drawDiagonalBorder(ctx, width, height, 50, ['#1a1a1a', colour]);
+  
+  // 2. Draw the inner white rectangle
   ctx.fillStyle = '#f9f9f9';
   const borderWidth = 30;
   roundedRect(ctx, borderWidth, borderWidth, width - borderWidth * 2, height - borderWidth * 2, 25);
-  ctx.fill(); // Define the content area for consistent positioning
-
+  ctx.fill();
+  
+  // Define the content area for consistent positioning
   const innerRectX = 45;
   const innerRectY = 45;
   const innerRectWidth = width - 2 * innerRectX;
-  const innerRectHeight = height - 2 * innerRectY; // 3. Draw ADRR logo and text
-
+  const innerRectHeight = height - 2 * innerRectY; 
+  
+  // 3. Draw ADRR logo and text
   const padding = 20;
-  const adrrLogoWhite = path.join(__dirname, 'assets', 'images', 'ADRR.png');
-  const adrrLogoBlack = await recolorImage(adrrLogoWhite, '#1a1a1a'); // Calculate text metrics
-
+  const adrrLogoWhite = adrrLogoPath;
+  const adrrLogoBlack = await recolorImage(adrrLogoWhite, '#1a1a1a'); 
+  
+  // Calculate text metrics
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
   ctx.fillStyle = '#1a1a1a';

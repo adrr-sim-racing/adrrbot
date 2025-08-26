@@ -1,8 +1,8 @@
 export interface EventData {
-  title: string;
-  seasonRound: string;
-  date: string;
-  classes: string;
   colour: string;
+  title: string;
+  date: string;
+  seasonRound: string;
+  classes: string;
   imagePath: string;
 }

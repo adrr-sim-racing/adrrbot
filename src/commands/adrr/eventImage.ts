@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, AttachmentBuilder } from 'discord.js';
 import { Command } from '../../interfaces/command';
 import { generateEventImage } from '../../utils/generateEventImage';
+import logger from '../../utils/logger';
 
 const eventImage: Command = {
   data: new SlashCommandBuilder()
@@ -24,6 +25,14 @@ const eventImage: Command = {
       opt.setName('date')
         .setDescription('Event date')
         .setRequired(true))
+    .addStringOption(opt =>
+      opt.setName('seasonround')
+        .setDescription('Season / Round')
+        .setRequired(true))
+    .addStringOption(opt =>
+      opt.setName('classes')
+        .setDescription('Classes')
+        .setRequired(true))
     .addAttachmentOption(opt =>
       opt.setName('image')
         .setDescription('Event image (square preferred)')
@@ -31,21 +40,27 @@ const eventImage: Command = {
 
   async run(interaction: ChatInputCommandInteraction) {
     await interaction.deferReply();
+    try {
+      const imageURL = interaction.options.getAttachment('image', true).url;
 
-    const imageURl = interaction.options.getAttachment('image', true).url;
+      const imageBuffer = await generateEventImage({
+        colour: interaction.options.getString('colour', true),
+        title: interaction.options.getString('title', true),
+        date: interaction.options.getString('date', true),
+        seasonRound: interaction.options.getString('seasonround', true),
+        classes: interaction.options.getString('classes', true),
+        imagePath: imageURL,
+      });
 
-    const imageBuffer = await generateEventImage({
-      title: interaction.options.getString('title', true),
-      seasonRound: interaction.options.getString('seasonRound', true),
-      date: interaction.options.getString('date', true),
-      classes: interaction.options.getString('classes', true),
-      colour: interaction.options.getString('colour', true),
-      imagePath: imageURl,
-    });
+      const attachment = new AttachmentBuilder(imageBuffer, { name: 'event.png' });
 
-    const attachment = new AttachmentBuilder(imageBuffer, { name: 'event.png' });
+      await interaction.editReply({ files: [attachment] });
+    } catch (error) {
+      logger.error(error);
 
-    await interaction.editReply({ files: [attachment] });
+      await interaction.editReply('Failed to  generate event image.');
+
+    }
     
   }
 };
