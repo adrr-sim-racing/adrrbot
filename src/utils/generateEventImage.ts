@@ -4,14 +4,19 @@ import { readFileSync } from 'fs';
 import path from 'path';
 
 let fontRegistered = false;
-const fontPath = path.join(process.cwd(), 'assets/fonts/urw-din-black.ttf');
-const adrrLogoPath = path.join(process.cwd(), 'assets/images/ADRR.png');
 
+// Helper function to recolor a PNG image.
 // Helper function to recolor a PNG image.
 async function recolorImage(imagePath: string, targetColor: string): Promise<Image> {
   try {
+    console.log('Recoloring image from:', imagePath);
+    
     const imgBuffer = readFileSync(imagePath);
+    console.log('Buffer size:', imgBuffer.length);
+    
     const img = await loadImage(imgBuffer);
+    console.log('Original image dimensions:', img.width, 'x', img.height);
+    
     const tempCanvas = createCanvas(img.width, img.height);
     const tempCtx = tempCanvas.getContext('2d');
 
@@ -21,9 +26,14 @@ async function recolorImage(imagePath: string, targetColor: string): Promise<Ima
     tempCtx.fillRect(0, 0, img.width, img.height);
     tempCtx.globalCompositeOperation = 'source-over';
 
-    const recoloredImg = new Image();
+    // Instead of creating a new Image object, return the result directly from loadImage
     const buffer = tempCanvas.toBuffer('image/png');
-    recoloredImg.src = new Uint8Array(buffer);
+    console.log('Recolored buffer size:', buffer.length);
+    
+    // Load the recolored buffer back as an image
+    const recoloredImg = await loadImage(buffer);
+    console.log('Final recolored image dimensions:', recoloredImg.width, 'x', recoloredImg.height);
+    
     return recoloredImg;
   } catch (error) {
     console.error('Error recoloring image:', error);
@@ -71,6 +81,16 @@ function drawDiagonalBorder(ctx: any, width: number, height: number, stripeSize:
  * @returns {Promise<Buffer>} The generated image as a Buffer.
  */
 export async function generateEventImage(data: EventData): Promise<Buffer> {
+  const fontPath = path.resolve(__dirname, '../../assets/fonts/urw-din-black.ttf');
+  const adrrLogoPath = path.resolve(__dirname, '../../assets/images/ADRR.png');
+
+  console.log('adrrLogoPath:', adrrLogoPath);
+  console.log('fontPath:', fontPath);
+
+  // Add file existence checks
+  console.log('Font file exists:', require('fs').existsSync(fontPath));
+  console.log('Logo file exists:', require('fs').existsSync(adrrLogoPath));
+
   // Register font once
   if (!fontRegistered) {
     GlobalFonts.registerFromPath(fontPath, 'URW DIN');
@@ -81,28 +101,32 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext('2d');
 
+  console.log(`canvas created. data: ${JSON.stringify(data)}`);
+
   const { title, seasonRound, date, classes, colour, imagePath } = data;
-  
+
   // 1. Draw the diagonal border
   drawDiagonalBorder(ctx, width, height, 50, ['#1a1a1a', colour]);
-  
+
   // 2. Draw the inner white rectangle
   ctx.fillStyle = '#f9f9f9';
   const borderWidth = 30;
   roundedRect(ctx, borderWidth, borderWidth, width - borderWidth * 2, height - borderWidth * 2, 25);
   ctx.fill();
-  
+
   // Define the content area for consistent positioning
   const innerRectX = 45;
   const innerRectY = 45;
   const innerRectWidth = width - 2 * innerRectX;
-  const innerRectHeight = height - 2 * innerRectY; 
-  
+  const innerRectHeight = height - 2 * innerRectY;
+
   // 3. Draw ADRR logo and text
   const padding = 20;
   const adrrLogoWhite = adrrLogoPath;
-  const adrrLogoBlack = await recolorImage(adrrLogoWhite, '#1a1a1a'); 
-  
+  const adrrLogoBlack = await recolorImage(adrrLogoWhite, '#1a1a1a');
+
+  console.log('adrrLogoBlack created');
+
   // Calculate text metrics
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
@@ -131,11 +155,36 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
   const adrrLogoX = innerRectX + padding;
   const adrrLogoY = innerRectY + padding;
 
+  // Add this debugging after the logo scaling calculations:
+  console.log('=== COORDINATE DEBUG ===');
+  console.log('adrrLogoBlack.height:', adrrLogoBlack.height);
+  console.log('adrrLogoBlack.width:', adrrLogoBlack.width);
+  console.log('textBlockHeight:', textBlockHeight);
+  console.log('desiredLogoHeight:', desiredLogoHeight);
+  console.log('logoScale:', logoScale);
+  console.log('adrrLogoWidth:', adrrLogoWidth);
+  console.log('adrrLogoHeight:', adrrLogoHeight);
+  console.log('adrrLogoX:', adrrLogoX);
+  console.log('adrrLogoY:', adrrLogoY);
+  console.log(
+    'adrrTextX calculation:',
+    adrrLogoX,
+    '+',
+    adrrLogoWidth,
+    '+',
+    padding,
+    '=',
+    adrrLogoX + adrrLogoWidth + padding
+  );
+
   ctx.drawImage(adrrLogoBlack, adrrLogoX, adrrLogoY, adrrLogoWidth, adrrLogoHeight);
 
   const adrrTextX = adrrLogoX + adrrLogoWidth + padding;
   const adrrTextY = adrrLogoY + 18;
   ctx.font = `bold ${adrrFontSize}px "URW DIN"`;
+  console.log('Drawing ADRR text at:', adrrTextX, adrrTextY);
+  console.log('Font set to:', ctx.font);
+  console.log('Fill style:', ctx.fillStyle);
   ctx.fillText('ADRR', adrrTextX, adrrTextY);
 
   const targetWidth = adrrTextWidth;
@@ -165,6 +214,10 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
 
   ctx.fillStyle = '#1a1a1a';
   ctx.font = 'bold italic 48px "URW DIN"';
+
+  // Before drawing title
+  console.log('Drawing title at:', innerRectX + padding, titleY - 15);
+  console.log('Title text:', title);
   ctx.fillText(title, innerRectX + padding, titleY - 15);
 
   ctx.font = '34px "URW DIN"';
@@ -173,7 +226,9 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
   ctx.fillText(classes, innerRectX + padding, dateY + dateSpacing + 90);
 
   ctx.font = 'bold 26px "URW DIN"';
-  ctx.fillText("ADRR.net", innerRectX + padding, dateY + dateSpacing + 150); // 5. Draw the inset image
+  ctx.fillText('ADRR.net', innerRectX + padding, dateY + dateSpacing + 150); // 5. Draw the inset image
+
+  console.log('inset image drawn');
 
   try {
     const eventImg = await loadImage(imagePath);
