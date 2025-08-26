@@ -7,4 +7,3 @@ prisma/database.db-journal
 *.sql
 pnpm-lock.yaml
 data.db
-dev.env
