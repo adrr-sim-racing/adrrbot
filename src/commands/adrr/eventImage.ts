@@ -39,11 +39,9 @@ const eventImage: Command = {
       seasonRound: interaction.options.getString('seasonRound', true),
       date: interaction.options.getString('date', true),
       classes: interaction.options.getString('classes', true),
-      adrrWebsite: interaction.options.getString('adrrWebsite', true),
       colour: interaction.options.getString('colour', true),
       imagePath: imageURl,
     });
-
 
     const attachment = new AttachmentBuilder(imageBuffer, { name: 'event.png' });
 
