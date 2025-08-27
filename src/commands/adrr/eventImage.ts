@@ -93,7 +93,7 @@ const eventImage: Command = {
       const colourTuple = Championships[eventType as ChampionshipKey].color;
       const colour = `rgb(${colourTuple[0]}, ${colourTuple[1]}, ${colourTuple[2]})`;
 
-      const seasonRound = `${interaction.options.getInteger('season', true)}/${interaction.options.getInteger('round', true)}`;
+      const seasonRound = `S${interaction.options.getInteger('season', true)} / Round ${interaction.options.getInteger('round', true)}`;
 
       const imageBuffer = await generateEventImage({
         colour: colour,
