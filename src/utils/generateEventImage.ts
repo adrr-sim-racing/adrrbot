@@ -223,13 +223,13 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
   console.log('Title text:', title);
   ctx.fillText(title, innerRectX + padding, titleY - 15);
 
-  ctx.font = '28px "Roboto Mono"';
+  ctx.font = 'bold 28px "Roboto Mono"';
   ctx.fillText(seasonRound, innerRectX + padding, dateY + dateSpacing);
-  ctx.fillText(date, innerRectX + padding, dateY + dateSpacing + 45);
-  ctx.fillText(classes, innerRectX + padding, dateY + dateSpacing + 90);
+  ctx.fillText(date, innerRectX + padding, dateY + dateSpacing + 40);
+  ctx.fillText(classes, innerRectX + padding, dateY + dateSpacing + 80);
 
-  ctx.font = 'bold 26px "Roboto Mono"';
-  ctx.fillText('ADRR.net', innerRectX + padding, dateY + dateSpacing + 150); // 5. Draw the inset image
+  ctx.font = 'bold 24px "Roboto Mono"';
+  ctx.fillText('www.adrr.net', innerRectX + padding, dateY + dateSpacing + 170); // 5. Draw the inset image
 
   console.log('inset image drawn');
 
