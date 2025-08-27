@@ -82,6 +82,7 @@ function drawDiagonalBorder(ctx: any, width: number, height: number, stripeSize:
  */
 export async function generateEventImage(data: EventData): Promise<Buffer> {
   const fontPath = path.resolve(__dirname, '../../assets/fonts/urw-din-black.ttf');
+  const fontPath2 = path.resolve(__dirname, '../../assets/fonts/RobotoMono-Regular.ttf');
   const adrrLogoPath = path.resolve(__dirname, '../../assets/images/ADRR.png');
 
   console.log('adrrLogoPath:', adrrLogoPath);
@@ -94,6 +95,7 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
   // Register font once
   if (!fontRegistered) {
     GlobalFonts.registerFromPath(fontPath, 'URW DIN');
+    GlobalFonts.registerFromPath(fontPath2, 'Roboto Mono');
     fontRegistered = true;
   }
   const width = 800;
@@ -180,15 +182,15 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
   ctx.drawImage(adrrLogoBlack, adrrLogoX, adrrLogoY, adrrLogoWidth, adrrLogoHeight);
 
   const adrrTextX = adrrLogoX + adrrLogoWidth + padding;
-  const adrrTextY = adrrLogoY + 18;
   ctx.font = `bold ${adrrFontSize}px "URW DIN"`;
-  // console.log('Drawing ADRR text at:', adrrTextX, adrrTextY);
-  // console.log('Font set to:', ctx.font);
-  // console.log('Fill style:', ctx.fillStyle);
+  
+  const adrrTextY = adrrLogoY + 18;
+  ctx.textBaseline = 'top';
   ctx.fillText('ADRR', adrrTextX, adrrTextY);
 
   const targetWidth = adrrTextWidth;
   let adjustedSimRacingFontSize = simRacingFontSize;
+
   ctx.font = `${adjustedSimRacingFontSize}px "URW DIN"`;
   let currentSimRacingWidth = ctx.measureText(simRacingText).width;
 
@@ -201,10 +203,11 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
   const adjustedSimRacingMetrics = ctx.measureText(simRacingText);
   const adjustedSimRacingHeight =
     adjustedSimRacingMetrics.actualBoundingBoxAscent + adjustedSimRacingMetrics.actualBoundingBoxDescent;
-  const simRacingTextY = adrrLogoY + adrrLogoHeight - adjustedSimRacingHeight;
+  const simRacingTextY = adrrLogoY + adrrLogoHeight - (adjustedSimRacingHeight * 0.4);
 
   ctx.font = `${adjustedSimRacingFontSize}px "URW DIN"`;
-  ctx.fillText(simRacingText, adrrTextX, simRacingTextY); // 4. Draw main title and other text
+  ctx.textBaseline = 'top';
+  ctx.fillText(simRacingText, adrrTextX, simRacingTextY);
 
   const brandingBlockBottom = adrrLogoY + adrrLogoHeight;
   const titleSpacing = padding * 3;
