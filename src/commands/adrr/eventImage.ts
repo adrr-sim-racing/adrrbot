@@ -24,10 +24,10 @@ const eventImage: Command = {
         .setRequired(true)
         .addChoices(
           { name: 'Interlagos', value: 'Interlagos' },
-          { name: 'Le Mans', value: 'LeMans' },
+          { name: 'Le Mans', value: 'Le Mans' },
           { name: 'Monza', value: 'Monza' },
           { name: 'Spa', value: 'Spa' },
-          { name: 'Portimão', value: 'Portimão' },
+          { name: 'Portimão', value: 'Portimao' },
           { name: 'Bahrain', value: 'Bahrain' },
           { name: 'COTA (WEC)', value: 'COTA' },
           { name: 'Imola', value: 'Imola' },

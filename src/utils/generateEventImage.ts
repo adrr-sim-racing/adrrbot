@@ -221,7 +221,7 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
   // Before drawing title
   console.log('Drawing title at:', innerRectX + padding, titleY - 15);
   console.log('Title text:', title);
-  ctx.fillText(title, innerRectX + padding, titleY - 15);
+  ctx.fillText(title.toUpperCase(), innerRectX + padding, titleY - 15);
 
   ctx.font = 'bold 28px "Roboto Mono"';
   ctx.fillText(seasonRound, innerRectX + padding, dateY + dateSpacing);
