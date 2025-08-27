@@ -131,7 +131,7 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
   ctx.fillStyle = '#1a1a1a';
-  const adrrFontSize = 40;
+  const adrrFontSize = 45;
   ctx.font = `bold ${adrrFontSize}px "URW DIN"`;
   const adrrMetrics = ctx.measureText('ADRR');
   const adrrTextWidth = adrrMetrics.width;
@@ -146,7 +146,7 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
 
   const lineGap = 5;
   const textBlockHeight = adrrTextHeight + lineGap + simRacingTextHeight;
-  const logoScaleMultiplier = 1.3;
+  const logoScaleMultiplier = 1;
   const desiredLogoHeight = textBlockHeight * logoScaleMultiplier;
   const logoScale = desiredLogoHeight / adrrLogoBlack.height;
   const adrrLogoWidth = adrrLogoBlack.width * logoScale;
@@ -156,35 +156,35 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
   const adrrLogoY = innerRectY + padding;
 
   // Add this debugging after the logo scaling calculations:
-  console.log('=== COORDINATE DEBUG ===');
-  console.log('adrrLogoBlack.height:', adrrLogoBlack.height);
-  console.log('adrrLogoBlack.width:', adrrLogoBlack.width);
-  console.log('textBlockHeight:', textBlockHeight);
-  console.log('desiredLogoHeight:', desiredLogoHeight);
-  console.log('logoScale:', logoScale);
-  console.log('adrrLogoWidth:', adrrLogoWidth);
-  console.log('adrrLogoHeight:', adrrLogoHeight);
-  console.log('adrrLogoX:', adrrLogoX);
-  console.log('adrrLogoY:', adrrLogoY);
-  console.log(
-    'adrrTextX calculation:',
-    adrrLogoX,
-    '+',
-    adrrLogoWidth,
-    '+',
-    padding,
-    '=',
-    adrrLogoX + adrrLogoWidth + padding
-  );
+  // console.log('=== COORDINATE DEBUG ===');
+  // console.log('adrrLogoBlack.height:', adrrLogoBlack.height);
+  // console.log('adrrLogoBlack.width:', adrrLogoBlack.width);
+  // console.log('textBlockHeight:', textBlockHeight);
+  // console.log('desiredLogoHeight:', desiredLogoHeight);
+  // console.log('logoScale:', logoScale);
+  // console.log('adrrLogoWidth:', adrrLogoWidth);
+  // console.log('adrrLogoHeight:', adrrLogoHeight);
+  // console.log('adrrLogoX:', adrrLogoX);
+  // console.log('adrrLogoY:', adrrLogoY);
+  // console.log(
+  //   'adrrTextX calculation:',
+  //   adrrLogoX,
+  //   '+',
+  //   adrrLogoWidth,
+  //   '+',
+  //   padding,
+  //   '=',
+  //   adrrLogoX + adrrLogoWidth + padding
+  // );
 
   ctx.drawImage(adrrLogoBlack, adrrLogoX, adrrLogoY, adrrLogoWidth, adrrLogoHeight);
 
   const adrrTextX = adrrLogoX + adrrLogoWidth + padding;
   const adrrTextY = adrrLogoY + 18;
   ctx.font = `bold ${adrrFontSize}px "URW DIN"`;
-  console.log('Drawing ADRR text at:', adrrTextX, adrrTextY);
-  console.log('Font set to:', ctx.font);
-  console.log('Fill style:', ctx.fillStyle);
+  // console.log('Drawing ADRR text at:', adrrTextX, adrrTextY);
+  // console.log('Font set to:', ctx.font);
+  // console.log('Fill style:', ctx.fillStyle);
   ctx.fillText('ADRR', adrrTextX, adrrTextY);
 
   const targetWidth = adrrTextWidth;
