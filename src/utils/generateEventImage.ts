@@ -82,7 +82,7 @@ function drawDiagonalBorder(ctx: any, width: number, height: number, stripeSize:
  */
 export async function generateEventImage(data: EventData): Promise<Buffer> {
   const fontPath = path.resolve(__dirname, '../../assets/fonts/urw-din-black.ttf');
-  const fontPath2 = path.resolve(__dirname, '../../assets/fonts/RobotoMono-Regular.ttf');
+  const fontPath2 = path.resolve(__dirname, '../../assets/fonts/RobotoMono-SemiBold.ttf');
   const adrrLogoPath = path.resolve(__dirname, '../../assets/images/ADRR.png');
 
   console.log('adrrLogoPath:', adrrLogoPath);
@@ -212,7 +212,7 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
   const brandingBlockBottom = adrrLogoY + adrrLogoHeight;
   const titleSpacing = padding * 3;
   const titleY = brandingBlockBottom + titleSpacing;
-  const dateSpacing = -5;
+  const dateSpacing = -20;
   const dateY = titleY + 60 + dateSpacing;
 
   ctx.fillStyle = '#1a1a1a';
@@ -223,7 +223,7 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
   console.log('Title text:', title);
   ctx.fillText(title, innerRectX + padding, titleY - 15);
 
-  ctx.font = '34px "Roboto Mono"';
+  ctx.font = '28px "Roboto Mono"';
   ctx.fillText(seasonRound, innerRectX + padding, dateY + dateSpacing);
   ctx.fillText(date, innerRectX + padding, dateY + dateSpacing + 45);
   ctx.fillText(classes, innerRectX + padding, dateY + dateSpacing + 90);
