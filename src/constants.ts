@@ -36,6 +36,11 @@ export const Championships = {
     thumbnailImage: 'https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/OTCBadge-p-500.webp',
     color: [48, 133, 252] as RGBTuple,  // OTC Blue
   },
+  aec: {
+    name: 'AEC',
+    thumbnailImage: 'https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/AEC-LOGOwebp.webp',
+    color: [237, 37, 78] as RGBTuple, // USC Red
+  },
   default: {
     name: 'Default',
     thumbnailImage: null,

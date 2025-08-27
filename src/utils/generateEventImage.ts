@@ -253,5 +253,46 @@ export async function generateEventImage(data: EventData): Promise<Buffer> {
     console.error('Error loading event image:', err);
   }
 
+  try {
+    const eventImg = await loadImage(imagePath);
+
+    const frameHeight = innerRectHeight;
+    const frameWidth = innerRectWidth * 0.45;
+    const frameX = innerRectX + innerRectWidth - frameWidth;
+    const frameY = innerRectY;
+    const cornerRadius = 20;
+
+    const imgAspectRatio = eventImg.width / eventImg.height;
+    const newImageHeight = frameHeight;
+    const newImageWidth = newImageHeight * imgAspectRatio;
+    const newImageX = frameX - (newImageWidth - frameWidth) / 2;
+    const newImageY = frameY;
+
+    // Clip and draw main event image
+    ctx.save();
+    roundedRect(ctx, frameX, frameY, frameWidth, frameHeight, cornerRadius);
+    ctx.clip();
+    ctx.drawImage(eventImg as Image, newImageX, newImageY, newImageWidth, newImageHeight);
+    ctx.restore();
+
+    // --- Add the FOT thumbnail in bottom-right corner ---
+    const fotImgPath = data.logoImagePath;
+    if (fotImgPath !== null) {
+      const fotImg = await loadImage(fotImgPath);
+
+      const fotScale = 0.5; // scale down the thumbnail to 25% of frame width
+      const fotWidth = frameWidth * fotScale;
+      const fotHeight = (fotImg.height / fotImg.width) * fotWidth;
+
+      const fotX = frameX + frameWidth - fotWidth - 30; // +10 to slightly overlap outside
+      const fotY = frameY + 20; // +10 to slightly overlap outside
+
+      ctx.drawImage(fotImg, fotX, fotY, fotWidth, fotHeight);
+    }
+
+  } catch (err) {
+    console.error('Error loading event or FOT image:', err);
+  }
+
   return canvas.toBuffer('image/png');
 }

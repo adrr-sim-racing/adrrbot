@@ -1,3 +1,5 @@
+import { RGBTuple } from "discord.js";
+
 export interface EventData {
   colour: string;
   title: string;
@@ -5,4 +7,5 @@ export interface EventData {
   seasonRound: string;
   classes: string;
   imagePath: string;
+  logoImagePath: string | null;
 }
