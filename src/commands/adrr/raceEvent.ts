@@ -1,4 +1,4 @@
-import { EmbedBuilder, TextChannel, ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits, APIMessageActionRowComponent } from 'discord.js';
+import { EmbedBuilder, TextChannel, ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits, MessageActionRowComponent } from 'discord.js';
 import { Bot } from '../..';
 import { Command } from '../../interfaces/command';
 import { ChampionshipData, ChampionshipCarClass } from '../../interfaces/simgrid';
@@ -123,7 +123,7 @@ const raceEvent: Command = {
                       "label": "Register",
                       "style": 5,
                       "url": `https://www.thesimgrid.com/user_championships/new?registerable_id=${data.id}&registerable_type=Championship`,
-                  } as APIMessageActionRowComponent,
+                  } as MessageActionRowComponent,
               ]
           }
       ]
