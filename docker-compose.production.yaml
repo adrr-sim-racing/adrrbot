@@ -2,7 +2,6 @@ services:
   bot:
     container_name: adrrbot
     image: stanocs5/adrrbot:latest
-    build: .
     restart: unless-stopped
     command: pnpm start:production
     volumes:
