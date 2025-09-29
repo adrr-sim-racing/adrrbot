@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionFlagsBits, CommandInteraction, MessageFlags } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction , MessageFlags } from 'discord.js';
 import { PrismaClient } from '@prisma/client';
 import { Command } from '../../interfaces/command';
 import logger from '../../utils/logger';
@@ -15,7 +15,7 @@ const Unban: Command = {
       option.setName('reason').setDescription('The reason for the unban').setRequired(false)
     ),
 
-  async run(interaction: CommandInteraction) {
+  async run(interaction: ChatInputCommandInteraction ) {
     if (!interaction.guild) {
       await interaction.reply({ content: 'This command can only be used in a guild.', ephemeral: true });
       return;
