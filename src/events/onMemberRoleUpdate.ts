@@ -105,34 +105,40 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
   }
 
   const roleAdded = auditLogEntry.changes?.some((change) => change.key === '$add');
-  const roleRemoved = auditLogEntry.changes?.some((change) => change.key === '$remove');
+  // const roleRemoved = auditLogEntry.changes?.some((change) => change.key === '$remove');
 
-  const result = await getSimGridPreferredName(targetUser);
-  if (!result.success) {
-    await logChannel.send({ content: result.message });
-    return;
-  }
+  logger.info(`Role added: ${roleAdded} / Rold ID: ${auditLogEntry.changes?.find((change) => change.key === '$add')?.new}`);
 
   if (roleAdded) {
     try {
+      // Which role was added?
+      const addedChange = auditLogEntry.changes?.find((change) => change.key === '$add');
+      logger.info(`Added change: ${JSON.stringify(addedChange)}`);
+
+      if (!addedChange || !addedChange.new) return;
+
+      const result = await getSimGridPreferredName(targetUser);
+      if (!result.success) {
+        await logChannel.send({ content: result.message });
+        return;
+      }
+
       const userRenamedEmbed = await updateMemberNickname(
         targetUser,
         result.preferredName,
         result.oldNickname,
         result.SimGridID
       );
+
       await logChannel.send({ embeds: [userRenamedEmbed] });
       logger.info(`Updated nickname for ${targetUser.user.tag} (${targetUser.user.id}) to ${result.preferredName}`);
-
-      // Which role was added?
-      const addedChange = auditLogEntry.changes?.find((change) => change.key === '$add');
-      if (!addedChange || !addedChange.new) return;
 
       const addedRoles = (Array.isArray(addedChange.new) ? addedChange.new : [addedChange.new]) as PartialRole[];
 
       for (const role of addedRoles) {
         if (!role || !role.id) continue;
 
+        logger.info(`Role ID: ${role.id}`);
         // Is the added role a child role?
         const parentRole = childRoles[role.id];
         if (!parentRole) return;
