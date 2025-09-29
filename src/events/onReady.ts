@@ -4,6 +4,7 @@ import Config from '../config';
 import logger from '../utils/logger';
 import { Command } from '../interfaces/command';
 import { cleanUpNewMemberRoles } from '../utils/cron';
+import { version as botVersion } from '../../package.json';
 
 function organizeCommandsByCategory(commands: Map<string, Command>) {
   const categorizedCommands = new Map<string, string[]>();
@@ -60,7 +61,7 @@ export const onReady = async (Bot: Client) => {
       .setColor(0x00ff00)
       .setTimestamp()
       .setFooter({
-        text: `${Config.NODE_ENV.charAt(0).toUpperCase() + Config.NODE_ENV.slice(1)} Mode • Bot Initialization`,
+        text: `${Config.NODE_ENV.charAt(0).toUpperCase() + Config.NODE_ENV.slice(1)} Mode • Bot Initialization • Version ${botVersion}`,
         iconURL: Bot.user?.avatarURL() || '',
       });
 
