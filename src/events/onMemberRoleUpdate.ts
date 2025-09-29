@@ -4,7 +4,6 @@ import logger from '../utils/logger';
 import fetchData from '../handlers/apiHandler';
 import { SimGridUser } from '../interfaces/simgrid';
 import { APIRequestUrls, RequestOptions, childRoles } from '../constants';
-import { prependListener } from 'process';
 
 type SimGridPreferredNameResult =
   | {
@@ -74,7 +73,7 @@ async function updateMemberNickname(
     .setTimestamp(new Date())
     .setFooter({ text: `Member ID: ${targetUser.user.id}` });
 
-  return userRenamedEmbed;
+  return userRenamedEmbed.toJSON();
 }
 
 export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, guild: Guild) => {
