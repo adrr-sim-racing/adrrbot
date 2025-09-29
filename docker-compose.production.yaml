@@ -15,10 +15,11 @@ services:
 
   watchtower:
     image: containrrr/watchtower
+    container_name: adrrbot-watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ~/.docker/config.json:/root/.docker/config.json
-    command: --interval 900 adrrbot  # Polls every 15 minutes and updates only the 'adrrbot' container
-
+    env_file:
+      - ./.env
+    command: --interval 300 --cleanup adrrbot
 volumes:
   db-data:
