@@ -107,15 +107,17 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
   const roleAdded = auditLogEntry.changes?.some((change) => change.key === '$add');
   // const roleRemoved = auditLogEntry.changes?.some((change) => change.key === '$remove');
 
-  logger.info(`Role added: ${roleAdded} / Rold ID: ${auditLogEntry.changes?.find((change) => change.key === '$add')?.new}`);
-
   if (roleAdded) {
     try {
       // Which role was added?
       const addedChange = auditLogEntry.changes?.find((change) => change.key === '$add');
       logger.info(`Added change: ${JSON.stringify(addedChange)}`);
 
-      if (!addedChange || !addedChange.new) return;
+      if (!addedChange || !addedChange.new)
+      {
+        logger.info('No added roles found in the audit log entry.');
+        return;
+      }
 
       const result = await getSimGridPreferredName(targetUser);
       if (!result.success) {
@@ -135,14 +137,18 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
 
       const addedRoles = (Array.isArray(addedChange.new) ? addedChange.new : [addedChange.new]) as PartialRole[];
 
+      logger.info(`Added roles: ${JSON.stringify(addedRoles)}`);
+
       for (const role of addedRoles) {
+        logger.info(`Processing added role: ${JSON.stringify(role)}`);
         if (!role || !role.id) continue;
 
-        logger.info(`Role ID: ${role.id}`);
+        logger.info(`Role ID: ${role.id} / Role name: ${role.name}`);
         // Is the added role a child role?
         const parentRole = childRoles[role.id];
         if (!parentRole) return;
 
+        logger.info(`Adding parent role: ${parentRole}`);
         await targetUser.roles.add(parentRole, 'Added parent role');
       }
     } catch (error) {
