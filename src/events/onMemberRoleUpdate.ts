@@ -120,20 +120,21 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
       }
 
       const result = await getSimGridPreferredName(targetUser);
-      if (!result.success) {
+
+      if(result.success) {
+        const userRenamedEmbed = await updateMemberNickname(
+          targetUser,
+          result.preferredName,
+          result.oldNickname,
+          result.SimGridID
+        );
+
+        await logChannel.send({ embeds: [userRenamedEmbed] });
+        logger.info(`Updated nickname for ${targetUser.user.tag} (${targetUser.user.id}) to ${result.preferredName}`);
+
+      } else {
         await logChannel.send({ content: result.message });
-        return;
       }
-
-      const userRenamedEmbed = await updateMemberNickname(
-        targetUser,
-        result.preferredName,
-        result.oldNickname,
-        result.SimGridID
-      );
-
-      await logChannel.send({ embeds: [userRenamedEmbed] });
-      logger.info(`Updated nickname for ${targetUser.user.tag} (${targetUser.user.id}) to ${result.preferredName}`);
 
       const addedRoles = (Array.isArray(addedChange.new) ? addedChange.new : [addedChange.new]) as PartialRole[];
 
