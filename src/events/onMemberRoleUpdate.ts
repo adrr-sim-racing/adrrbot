@@ -3,7 +3,8 @@ import Config from '../config';
 import logger from '../utils/logger';
 import fetchData from '../handlers/apiHandler';
 import { SimGridUser } from '../interfaces/simgrid';
-import { APIRequestUrls, RequestOptions, childRoles } from '../constants';
+import { APIRequestUrls, RequestOptions, childRoles, roleRounds } from '../constants';
+import { ChampionshipData } from '../interfaces/simgrid';
 
 type SimGridPreferredNameResult =
   | {
@@ -105,7 +106,7 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
   }
 
   const roleAdded = auditLogEntry.changes?.some((change) => change.key === '$add');
-  // const roleRemoved = auditLogEntry.changes?.some((change) => change.key === '$remove');
+  const roleRemoved = auditLogEntry.changes?.some((change) => change.key === '$remove');
 
   if (roleAdded) {
     try {
@@ -151,11 +152,45 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
 
         logger.info(`Adding parent role: ${parentRole}`);
         await targetUser.roles.add(parentRole, 'Added parent role');
+
+        const roundID = roleRounds[role.id];
+        const getChampionshipURL = `${APIRequestUrls.getChampionship}${roundID}`;
+        const roundEntered = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
+
+        logChannel.send({ content: `${targetUser.user.tag} has entered ${roundEntered.name}` });
       }
     } catch (error) {
       const msg = `Failed to add parent role for ${targetUser.user.tag} (${targetUser.user.id}):`;
       logger.error(msg, error);
       await logChannel.send({ content: msg });
     }
+  }
+
+  if (roleRemoved) {
+      const removedChange = auditLogEntry.changes?.find((change) => change.key === '$remove');
+      logger.info(`Removed change: ${JSON.stringify(removedChange)}`);
+
+      if (!removedChange || !removedChange.new)
+      {
+        logger.info('No removed roles found in the audit log entry.');
+        return;
+      }
+      const removedRoles = (Array.isArray(removedChange.new) ? removedChange.new : [removedChange.new]) as PartialRole[];
+
+      for (const role of removedRoles) {
+        logger.info(`Processing removed role: ${JSON.stringify(role)}`);
+        if (!role || !role.id) continue;
+
+        logger.info(`Role ID: ${role.id} / Role name: ${role.name}`);
+
+        const parentRole = childRoles[role.id];
+        if (!parentRole) return;
+
+        const roundID = roleRounds[role.id];
+        const getChampionshipURL = `${APIRequestUrls.getChampionship}${roundID}`;
+        const roundEntered = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
+
+        logChannel.send({ content: `${targetUser.user.tag} has withdrawn from ${roundEntered.name}` });
+      }
   }
 };
