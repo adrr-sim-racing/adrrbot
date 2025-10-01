@@ -157,7 +157,7 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
         const getChampionshipURL = `${APIRequestUrls.getChampionship}${roundID}`;
         const roundEntered = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
 
-        logChannel.send({ content: `${targetUser.user.tag} has entered ${roundEntered.name}` });
+        logChannel.send({ content: `${targetUser.user.tag} has entered [${roundEntered.name}](<${roundEntered.url}>)` });
       }
     } catch (error) {
       const msg = `Failed to add parent role for ${targetUser.user.tag} (${targetUser.user.id}):`;
@@ -190,7 +190,7 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
         const getChampionshipURL = `${APIRequestUrls.getChampionship}${roundID}`;
         const roundEntered = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
 
-        logChannel.send({ content: `${targetUser.user.tag} has withdrawn from ${roundEntered.name}` });
+        logChannel.send({ content: `${targetUser.user.tag} has withdrawn from [${roundEntered.name}](<${roundEntered.url}>)` });
       }
   }
 };
