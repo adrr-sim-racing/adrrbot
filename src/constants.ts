@@ -21,20 +21,15 @@ export const RequestOptions: RequestInit = {
   },
 };
 export const Championships = {
-  usc: {
-    name: 'USC',
-    thumbnailImage: 'https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/image/USCLogo.png',
-    color: [237, 37, 78] as RGBTuple, // USC Red
-  },
   fot:  {
     name: 'FOT',
     thumbnailImage: 'https://i.fmfile.com/Km44dzC3oIVfckiyEjRbl/FOT_Light.png',
     color: [235, 251, 72] as RGBTuple,  // ADRR Yellow
   },
-  otc: {
-    name: 'OTC',
-    thumbnailImage: 'https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/OTCBadge-p-500.webp',
-    color: [48, 133, 252] as RGBTuple,  // OTC Blue
+  gt3o: {
+    name: 'GT3O',
+    thumbnailImage: 'https://chibi.iitranq.co.uk/rdl5AH9xTh38.webp',
+    color: [192, 102, 147] as RGBTuple,  // GT3O Pink
   },
   aec: {
     name: 'AEC',
