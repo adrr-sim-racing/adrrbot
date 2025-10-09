@@ -27,7 +27,7 @@ const raceEvent: Command = {
           { name: 'Default', value: 'default' },
           { name: 'USC', value: 'usc' },
           { name: 'FOT', value: 'fot' },
-          { name: 'OTC', value: 'otc' },
+          { name: 'GT3O', value: 'gt3o' },
         )
     )
     .addStringOption((option) =>
