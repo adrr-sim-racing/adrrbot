@@ -2,7 +2,7 @@ import { EmbedBuilder, TextChannel, ChatInputCommandInteraction, SlashCommandBui
 import { Bot } from '../..';
 import { Command } from '../../interfaces/command';
 import { ChampionshipData, ChampionshipCarClass } from '../../interfaces/simgrid';
-import { APIRequestUrls, Championships, DailyRaceChannelID, RequestOptions } from '../../constants';
+import { APIRequestUrls, Championships, RequestOptions } from '../../constants';
 import fetchData from '../../handlers/apiHandler';
 import logger from '../../utils/logger';
 
@@ -33,6 +33,9 @@ const raceEvent: Command = {
     .addStringOption((option) =>
       option.setName('id').setDescription('The id for the championship you wish to retrieve').setRequired(true)
     )
+    .addChannelOption((option) =>
+      option.setName('channel').setDescription('The channel to post the announcement in').setRequired(true)
+    )
     .addStringOption((option) =>
       option.setName('password').setDescription('Server password required to join event').setRequired(false)
     )
@@ -42,6 +45,7 @@ const raceEvent: Command = {
   run: async (interaction: ChatInputCommandInteraction) => {
     const championshipChoice = interaction.options.getString('type');
     const id = interaction.options.getString('id');
+    const channel = interaction.options.getChannel('channel') as TextChannel;
     const eventPassword = interaction.options.getString('password');
     const notes = interaction.options.getString('notes');
 
@@ -60,8 +64,6 @@ const raceEvent: Command = {
       await interaction.editReply({
         content: `Championship data retrieved: ${data.name || 'Unknown'}`,
       });
-
-      const AnnounceChannel = Bot.channels.cache.get(DailyRaceChannelID) as TextChannel;
 
       const championshipEmbed = new EmbedBuilder()
         .setTitle(`${data.name}`)
@@ -112,7 +114,7 @@ const raceEvent: Command = {
           value: `${notes}`,
         });
       }
-      await AnnounceChannel?.send({
+      await channel?.send({
         embeds: [championshipEmbed],
         "components": [
           {
