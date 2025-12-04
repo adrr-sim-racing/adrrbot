@@ -1,7 +1,21 @@
+export interface TrackData {
+  id: number;
+  game_id: number;
+  name: string;
+  in_game_name: string;
+  photo: string;
+  parent_track_id: number;
+  external_data: any;
+  content_type: string;
+  mod_download_link: string;
+  track_layouts_count: 0;
+  composite_name: string;
+}
+
 export interface RaceData {
   id: number;
   race_name: string;
-  track: string;
+  track: TrackData;
   starts_at: string;
   display_name: string;
   results_available: boolean;

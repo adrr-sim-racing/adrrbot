@@ -81,7 +81,7 @@ const raceEvent: Command = {
         .setFields(
           {
             name: 'Race Information',
-            value: `🔹${formatDiscordTimestamp(data.races[0].starts_at)}\n🔹${data.races[0].track}\n🔹${carClasses}`,
+            value: `🔹${formatDiscordTimestamp(data.races[0].starts_at)}\n🔹${data.races[0].track.name}\n🔹${carClasses}`,
             inline: false,
           },
           {
