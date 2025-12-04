@@ -8,19 +8,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Warn {
-  id        Int      @id @default(autoincrement())
-  reason    String   
-  issuerId  String   
-  targetId  String   
-  issuedAt  DateTime 
-  User      User     @relation(fields: [targetId], references: [id])
-
-  @@index([targetId])
+model GuildConfig {
+  guildId                  String  @id
+  name                     String
+  websiteUrl               String
+  logoImageUrl             String
+  logChannel               String
+  memberActivityChannel    String
+  memberJoinChannel        String
+  memberRoleId             String
+  newMemberRoleId          String
+  simgridApiKey            String
+  primaryColor             String
+  secondaryColor           String
+  tertiaryColor            String
 }
+
 
 model User {
   id             String    @id
+  guildId        String
   warns          Int       @default(0)
   timeouts       Int       @default(0)
   warnings       Warn[]   
@@ -30,15 +37,48 @@ model User {
   riskScore      Int       @default(0)
   lastScan       DateTime?
 
+  @@unique([id, guildId])
   @@index([riskScore])
+}
+
+model Warn {
+  id        Int      @id @default(autoincrement())
+  guildId   String
+  reason    String
+  issuerId  String
+  targetId  String
+  issuedAt  DateTime
+  User      User     @relation(fields: [targetId], references: [id])
+
+  @@index([targetId])
 }
 
 model Ban {
   id           Int      @id @default(autoincrement())
-  reason       String   
-  issuerId     String   
-  targetId     String   
-  issuedAt     DateTime 
+  guildId      String
+  reason       String
+  issuerId     String
+  targetId     String
+  issuedAt     DateTime
 
   @@index([targetId])
+}
+
+model Championship {
+  id                  Int      @id // SimGrid-provided, globally unique
+  guildId             String
+  name                String
+  thumbnailImageUrl   String
+  color               String
+  rounds              ChampionshipRound[]
+}
+
+model ChampionshipRound {
+  id                  Int      @id
+  guildId             String
+  championshipId      Int
+  associatedRoleId    String?
+  championship        Championship @relation(fields: [championshipId], references: [id])
+  @@index([guildId])
+  @@index([championshipId])
 }

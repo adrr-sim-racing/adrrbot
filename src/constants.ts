@@ -1,15 +1,10 @@
 import { RGBTuple } from "discord.js";
 import Config from './config';
 
-export const GithubUrl = 'https://github.com/adrr-simracing';
-export const GithubApi = 'https://api.github.com/repos/adrr-simracing';
-export const WebsiteUrl = 'https://adrr.net';
-
 export const APIRequestUrls = {
   baseURL: "https://www.thesimgrid.com/api/v1",
   getChampionship: "https://www.thesimgrid.com/api/v1/championships/",
   getUser: "https://www.thesimgrid.com/api/v1/users/"
-
 };
 
 export const RequestOptions: RequestInit = {
@@ -20,6 +15,7 @@ export const RequestOptions: RequestInit = {
     Authorization: `Bearer ${Config.SIMGRID_API_KEY}`,
   },
 };
+
 export const Championships = {
   fot:  {
     name: 'FOT',
@@ -42,13 +38,12 @@ export const Championships = {
     color: [235, 251, 72] as RGBTuple,  // ADRR Yellow
   }
 };
+
 export const ADRRColours = {
   Primary: [235, 251, 72] as RGBTuple,  // ADRR Yellow
   Secondary: [237, 37, 78] as RGBTuple,  // USC Red
 };
 export const ADRRColoursArray: RGBTuple[] = Object.values(ADRRColours);
-
-export const DailyRaceChannelID = "1349283376560865342";
 
 // ignored role IDs for onMessageCreate.ts
 export const ignoredRoles = [
