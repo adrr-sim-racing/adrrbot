@@ -19,9 +19,9 @@ model GuildConfig {
   memberRoleId             String
   newMemberRoleId          String
   simgridApiKey            String
-  primaryColor             String
-  secondaryColor           String
-  tertiaryColor            String
+  primaryColor?            String
+  secondaryColor?          String
+  tertiaryColor?           String
 }
 
 
@@ -39,6 +39,25 @@ model User {
 
   @@unique([id, guildId])
   @@index([riskScore])
+}
+
+SimGridUser {
+  id                Int           @id
+  guildId           String
+  discordUserId     String
+  User              User          @relation(fields: [discordUserId], references: [id])
+  teams             SimGridTeam[]
+  preferredName?    String
+
+  @@unique([id, guildId])
+}
+
+SimGridTeam {
+  id      Int @id
+  name    String
+  avatar  String
+
+  users   SimGridUser[]
 }
 
 model Warn {
