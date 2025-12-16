@@ -68,9 +68,7 @@ async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
         })),
       },
       image: data.image,
-      gameName: data.game_name,
       roleId: roleName,
-      roleName: roleName,
     },
     create: {
       id: championshipId,
@@ -84,9 +82,7 @@ async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
         })),
       },
       image: data.image,
-      gameName: data.game_name,
       roleId: roleName,
-      roleName: roleName,
     },
   });
 

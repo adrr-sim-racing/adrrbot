@@ -45,12 +45,11 @@ model Ban {
 }
 
 model Championship {
-  id       Int     @id
-  name     String
-  races    Race[]
-  image    String?
-  gameName String?
-  roleId   String?
+  id     Int     @id
+  name   String
+  races  Race[]
+  image  String?
+  roleId String?
 }
 
 model Race {
