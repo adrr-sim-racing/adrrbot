@@ -1,9 +1,20 @@
 import { Interaction, TextChannel } from 'discord.js';
 import commands from '../handlers/commandHandler';
+import handleChampionshipAddModal from '../handlers/championshipModalHandler';
 import Config from '../config';
 import logger from '../utils/logger';
 
 export const onInteraction = async (interaction: Interaction) => {
+  if (interaction.isModalSubmit()) {
+    switch (interaction.customId) {
+      case 'championshipAddModal':
+        await handleChampionshipAddModal(interaction);
+        return;
+      default:
+        break;
+    }
+  }
+
   if (!interaction.isChatInputCommand()) return;
 
   const command = commands.get(interaction.commandName);

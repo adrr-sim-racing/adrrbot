@@ -29,6 +29,7 @@ model User {
   joinedAt       DateTime  
   riskScore      Int       @default(0)
   lastScan       DateTime?
+  simgridId      String?
 
   @@index([riskScore])
 }
@@ -41,4 +42,21 @@ model Ban {
   issuedAt     DateTime 
 
   @@index([targetId])
+}
+
+model Championship {
+  id                  Int      @id
+  name                String
+  races               Race[]
+  image               String?
+  gameName            String?
+  roleId              String?
+  
+}
+
+model Race {
+  id                  Int      @id
+  name                String
+  trackName           String
+  startsAt            DateTime
 }
