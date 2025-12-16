@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output = "../node_modules/.prisma/client"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -9,54 +9,55 @@ datasource db {
 }
 
 model Warn {
-  id        Int      @id @default(autoincrement())
-  reason    String   
-  issuerId  String   
-  targetId  String   
-  issuedAt  DateTime 
-  User      User     @relation(fields: [targetId], references: [id])
+  id       Int      @id @default(autoincrement())
+  reason   String
+  issuerId String
+  targetId String
+  issuedAt DateTime
+  User     User     @relation(fields: [targetId], references: [id])
 
   @@index([targetId])
 }
 
 model User {
-  id             String    @id
-  warns          Int       @default(0)
-  timeouts       Int       @default(0)
-  warnings       Warn[]   
-  messageCount   Int       @default(0)
-  lastMessageAt  DateTime?
-  joinedAt       DateTime  
-  riskScore      Int       @default(0)
-  lastScan       DateTime?
-  simgridId      String?
+  id            String    @id
+  warns         Int       @default(0)
+  timeouts      Int       @default(0)
+  warnings      Warn[]
+  messageCount  Int       @default(0)
+  lastMessageAt DateTime?
+  joinedAt      DateTime
+  riskScore     Int       @default(0)
+  lastScan      DateTime?
+  simgridId     String?
 
   @@index([riskScore])
 }
 
 model Ban {
-  id           Int      @id @default(autoincrement())
-  reason       String   
-  issuerId     String   
-  targetId     String   
-  issuedAt     DateTime 
+  id       Int      @id @default(autoincrement())
+  reason   String
+  issuerId String
+  targetId String
+  issuedAt DateTime
 
   @@index([targetId])
 }
 
 model Championship {
-  id                  Int      @id
-  name                String
-  races               Race[]
-  image               String?
-  gameName            String?
-  roleId              String?
-  
+  id       Int     @id
+  name     String
+  races    Race[]
+  image    String?
+  gameName String?
+  roleId   String?
 }
 
 model Race {
-  id                  Int      @id
-  name                String
-  trackName           String
-  startsAt            DateTime
+  id             Int           @id
+  name           String
+  trackName      String
+  startsAt       DateTime
+  Championship   Championship? @relation(fields: [championshipId], references: [id])
+  championshipId Int?
 }
