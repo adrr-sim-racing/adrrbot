@@ -107,7 +107,11 @@ const Championship: Command = {
       if (subcommand === 'list') {
         // List all championships
         // Send list of championships
-        const championships = await prisma.championship.findMany();
+        const championships = await prisma.championship.findMany({
+          include: {
+            races: true
+          }
+        });
 
         if (championships.length === 0) {
             await interaction.reply({
@@ -118,10 +122,12 @@ const Championship: Command = {
           }
 
           const championshipList = championships.map((championship) => {
+            const raceList = championship.races.length > 0 ? championship.races.map((race) => race.name).join(', ') : 'No races found';
+
             return (
-              `Championship ID: [https://www.thesimgrid.com/championships/${championship.id}](${championship.id})\n` +
-              `Championship name: ${championship.name}\n` +
-              `Championship role: ${championship.roleId ? `<@&${championship.roleId}>` : 'None'}`
+              `🏆 **${championship.name}** (ID: ${championship.id})\n` +
+              `Role: ${championship.roleId ? `<@&${championship.roleId}>` : 'None'}\n` +
+              `**Races:**\n${raceList}`
             );
           });
 
@@ -129,7 +135,7 @@ const Championship: Command = {
 
           await interaction.reply({
             content: championshipList.join('\n\n'),
-            ephemeral: true
+            ephemeral: false
           });
 
           return;
