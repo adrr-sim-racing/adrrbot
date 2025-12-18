@@ -68,7 +68,7 @@ async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
         })),
       },
       image: data.image,
-      roleId: roleName,
+      roleId: role.id,
     },
     create: {
       id: championshipId,
