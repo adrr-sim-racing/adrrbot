@@ -3,12 +3,14 @@ import { ChampionshipData } from '../interfaces/simgrid';
 import { APIRequestUrls, RequestOptions } from '../constants';
 import { PrismaClient } from '@prisma/client';
 import fetchData from '../handlers/apiHandler';
+import logger from '../utils/logger';
 
 const prisma = new PrismaClient();
 
 async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
   const roleName = interaction.fields.getTextInputValue('roleName');
   const championshipId = Number(interaction.fields.getTextInputValue('championshipId'));
+  logger.info(`Championship modal triggered for ${championshipId}`);
 
   if (!interaction.guild) {
     await interaction.reply({
@@ -50,41 +52,37 @@ async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
   const data = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
 
   // - store in DB
-  await prisma.championship.upsert({
-    where: {
-      id: championshipId,
-    },
-    update: {
-      name: data.name,
-      races: {
-        connectOrCreate: data.races.map((race) => ({
-          where: { id: race.id },
-          create: {
+  const existing = await prisma.championship.findUnique({
+    where: { id: championshipId },
+  });
+
+  if (existing) {
+    await prisma.championship.update({
+      where: { id: championshipId },
+      data: {
+        name: data.name,
+        image: data.image,
+        roleId: role.id,
+      },
+    });
+  } else {
+    await prisma.championship.create({
+      data: {
+        id: championshipId,
+        name: data.name,
+        image: data.image,
+        roleId: role.id,
+        races: {
+          create: data.races.map((race) => ({
             id: race.id,
             name: race.race_name,
             trackName: race.track.name,
             startsAt: new Date(race.starts_at),
-          },
-        })),
+          })),
+        },
       },
-      image: data.image,
-      roleId: role.id,
-    },
-    create: {
-      id: championshipId,
-      name: data.name,
-      races: {
-        create: data.races.map((race) => ({
-          id: race.id,
-          name: race.race_name,
-          trackName: race.track.name,
-          startsAt: new Date(race.starts_at),
-        })),
-      },
-      image: data.image,
-      roleId: roleName,
-    },
-  });
+    });
+}
 
   await interaction.reply({
     content: `✅ Championship **${championshipId}** added with role **${roleName}**`,
