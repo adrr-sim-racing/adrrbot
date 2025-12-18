@@ -151,10 +151,10 @@ const Championship: Command = {
           }
 
           const championshipList = championships.map((championship) => {
-            const raceList = championship.races.length > 0 ? championship.races.map((race) => race.name).join(', ') : 'No races found';
+            const raceList = championship.races.length > 0 ? championship.races.map((race) => race.name).join('\n') : 'No races found';
 
             return (
-              `🏆 **${championship.name}** (ID: ${championship.id})\n` +
+              `🏆 **${championship.name}** (ID: [${championship.simgridId}](https://simgrid.org/championships/${championship.simgridId}))\n` +
               `Role: ${championship.roleId ? `<@&${championship.roleId}>` : 'None'}\n` +
               `**Races:**\n${raceList}`
             );
