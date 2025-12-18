@@ -10,7 +10,9 @@ import {
 } from 'discord.js';
 import { Command } from '../../interfaces/command';
 import logger from '../../utils/logger';
+import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
 
 const Championship: Command = {
   data: new SlashCommandBuilder()
@@ -86,7 +88,51 @@ const Championship: Command = {
         );
 
         await interaction.showModal(championshipAddModal);
+        return;
+      }
 
+      if (subcommand === 'remove') {
+        // get the id from command options
+
+        // Check if the championship exists in the database
+        // Remove from database
+        // Remove the role
+        // Send confirmation message
+
+        logger.info('Championship removal command ran');
+        await interaction.reply({ content: 'Championship removal command ran', ephemeral: true });
+        return;
+      }
+
+      if (subcommand === 'list') {
+        // List all championships
+        // Send list of championships
+        const championships = await prisma.championship.findMany();
+
+        if (championships.length === 0) {
+            await interaction.reply({
+              content: 'No championships found.',
+              ephemeral: true
+            });
+            return;
+          }
+
+          const championshipList = championships.map((championship) => {
+            return (
+              `Championship ID: [https://www.thesimgrid.com/championships/${championship.id}](${championship.id})\n` +
+              `Championship name: ${championship.name}\n` +
+              `Championship role: ${championship.roleId ? `<@&${championship.roleId}>` : 'None'}`
+            );
+          });
+
+          logger.info('Championship list command ran');
+
+          await interaction.reply({
+            content: championshipList.join('\n\n'),
+            ephemeral: true
+          });
+
+          return;
       }
     }
 }
