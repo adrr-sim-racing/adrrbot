@@ -52,20 +52,7 @@ async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
   const data = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
 
   // - store in DB
-  const existing = await prisma.championship.findUnique({
-    where: { id: championshipId },
-  });
-
-  if (existing) {
-    await prisma.championship.update({
-      where: { id: championshipId },
-      data: {
-        name: data.name,
-        image: data.image,
-        roleId: role.id,
-      },
-    });
-  } else {
+  try {
     await prisma.championship.create({
       data: {
         id: championshipId,
@@ -82,7 +69,21 @@ async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
         },
       },
     });
-}
+  } catch (e: any) {
+    if (e.code === 'P2002') {
+      // already exists, safe to ignore or update
+      await prisma.championship.update({
+        where: { id: championshipId },
+        data: {
+          name: data.name,
+          image: data.image,
+          roleId: role.id,
+        },
+      });
+    } else {
+      throw e;
+    }
+  }
 
   await interaction.reply({
     content: `✅ Championship **${championshipId}** added with role **${roleName}**`,
