@@ -41,7 +41,6 @@ const Championship: Command = {
 
     async run(interaction: ChatInputCommandInteraction) {
       const subcommand = interaction.options.getSubcommand();
-      const id = interaction.options.getInteger('id');
 
       if (!(interaction.channel instanceof TextChannel)) {
         await interaction.reply({ content: 'This command can only be used in text channels.', flags: MessageFlags.Ephemeral });
@@ -102,13 +101,13 @@ const Championship: Command = {
         if (!championship) {
           await interaction.reply({
             content: `No championship found with ID **${id}**.`,
-            flags: MessageFlags.Ephemeral
+              ephemeral: true
           });
           return;
         }
 
         await prisma.championship.delete({
-          where: { id }
+          where: { id: championship.id }
         });
 
         if (championship.roleId) {
@@ -123,8 +122,8 @@ const Championship: Command = {
               error
             );
             await interaction.reply({
-              content: `No championship found with ID **${id}**.`,
-              flags: MessageFlags.Ephemeral
+              content: `Failed to delete role ${championship.roleId} for championship ${id}`,
+              ephemeral: true
             });
           }
         }
@@ -149,16 +148,16 @@ const Championship: Command = {
         if (championships.length === 0) {
             await interaction.reply({
               content: 'No championships found.',
-              flags: MessageFlags.Ephemeral
+              ephemeral: true
             });
             return;
           }
 
           const championshipList = championships.map((championship) => {
-            const raceList = championship.races.length > 0 ? championship.races.map((race) => race.name).join('\n') : 'No races found';
+            const raceList = championship.races.length > 0 ? championship.races.map((race) => `* ${race.name}`).join('\n') : 'No races found';
 
             return (
-              `${championship.id}: [${championship.name}](https://thesimgrid.com/championships/${championship.simgridId}))\n` +
+              `${championship.id}: ID: ${championship.simgridId} [${championship.name}](https://thesimgrid.com/championships/${championship.simgridId})\n` +
               `Role: ${championship.roleId ? `<@&${championship.roleId}>` : 'None'}\n` +
               `**Races:**\n${raceList}`
             );
@@ -168,6 +167,7 @@ const Championship: Command = {
 
           await interaction.reply({
             content: championshipList.join('\n\n'),
+            flags: MessageFlags.SuppressEmbeds,
           });
 
           return;
