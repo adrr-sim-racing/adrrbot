@@ -23,7 +23,7 @@ export const Bot = new Client({
   ],
 });
 
-Bot.once('ready', async () => await onReady(Bot));
+Bot.once('clientReady', async () => await onReady(Bot));
 
 Bot.on(Events.GuildAuditLogEntryCreate, async (auditLogEntry, guild) => {
   switch (auditLogEntry.action) {
