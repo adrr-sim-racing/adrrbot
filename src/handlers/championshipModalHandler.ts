@@ -55,13 +55,13 @@ async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
   try {
     await prisma.championship.create({
       data: {
-        id: championshipId,
+        simgridId: championshipId,
         name: data.name,
         image: data.image,
         roleId: role.id,
         races: {
           create: data.races.map((race) => ({
-            id: race.id,
+            simgridId: race.id,
             name: race.race_name,
             trackName: race.track.name,
             startsAt: new Date(race.starts_at),

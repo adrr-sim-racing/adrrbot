@@ -45,18 +45,24 @@ model Ban {
 }
 
 model Championship {
-  id     Int     @id
-  name   String
-  races  Race[]
-  image  String?
-  roleId String?
+  id        Int     @id @default(autoincrement())
+  simgridId Int     @unique
+  name      String
+  races     Race[]
+  image     String?
+  roleId    String?
+
+  @@index([simgridId])
 }
 
 model Race {
-  id             Int           @id
+  id             Int           @id @default(autoincrement())
+  simgridId      Int           @unique
   name           String
   trackName      String
   startsAt       DateTime
   Championship   Championship? @relation(fields: [championshipId], references: [id])
   championshipId Int?
+
+  @@index([simgridId])
 }
