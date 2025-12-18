@@ -52,38 +52,38 @@ async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
   const data = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
 
   // - store in DB
-  try {
-    await prisma.championship.create({
-      data: {
-        simgridId: championshipId,
-        name: data.name,
-        image: data.image,
-        roleId: role.id,
-        races: {
-          create: data.races.map((race) => ({
-            simgridId: race.id,
-            name: race.race_name,
-            trackName: race.track.name,
-            startsAt: new Date(race.starts_at),
-          })),
-        },
+const existing = await prisma.championship.findUnique({
+  where: { id: championshipId },
+});
+
+if (existing) {
+  await prisma.championship.update({
+    where: { id: championshipId },
+    data: {
+      name: data.name,
+      image: data.image,
+      roleId: role.id,
+    },
+  });
+} else {
+  await prisma.championship.create({
+    data: {
+      simgridId: championshipId,
+      name: data.name,
+      image: data.image,
+      roleId: role.id,
+      races: {
+        create: data.races.map((race) => ({
+          simgridId: race.id,
+          name: race.race_name,
+          trackName: race.track.name,
+          startsAt: new Date(race.starts_at),
+        })),
       },
-    });
-  } catch (e: any) {
-    if (e.code === 'P2002') {
-      // already exists, safe to ignore or update
-      await prisma.championship.update({
-        where: { id: championshipId },
-        data: {
-          name: data.name,
-          image: data.image,
-          roleId: role.id,
-        },
-      });
-    } else {
-      throw e;
-    }
-  }
+    },
+  });
+}
+
 
   await interaction.reply({
     content: `✅ Championship **${championshipId}** added with role **${roleName}**`,
