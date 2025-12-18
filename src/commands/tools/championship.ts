@@ -92,15 +92,44 @@ const Championship: Command = {
       }
 
       if (subcommand === 'remove') {
-        // get the id from command options
+        const id = interaction.options.getInteger('id', true);
 
-        // Check if the championship exists in the database
-        // Remove from database
-        // Remove the role
-        // Send confirmation message
+        const championship = await prisma.championship.findUnique({
+          where: { id }
+        });
 
-        logger.info('Championship removal command ran');
-        await interaction.reply({ content: 'Championship removal command ran', ephemeral: true });
+        if (!championship) {
+          await interaction.reply({
+            content: `No championship found with ID **${id}**.`,
+            ephemeral: true
+          });
+          return;
+        }
+
+        await prisma.championship.delete({
+          where: { id }
+        });
+
+        if (championship.roleId) {
+          try {
+            const role = interaction.guild?.roles.cache.get(championship.roleId);
+            if (role) {
+              await role.delete('Championship removed');
+            }
+          } catch (error) {
+            logger.warn(
+              `Failed to delete role ${championship.roleId} for championship ${id}`,
+              error
+            );
+          }
+        }
+
+        await interaction.reply({
+          content: `✅ Championship **${championship.name}** (ID: ${id}) has been removed.`,
+          ephemeral: true
+        });
+
+        logger.info(`Championship ${id} removed`);
         return;
       }
 
