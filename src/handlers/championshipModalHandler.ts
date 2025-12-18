@@ -29,7 +29,7 @@ async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
 
   let role = interaction.guild.roles.cache.find((role) => role.name === roleName);
 
-  if (role) {
+  if (!role) {
     role = await interaction.guild.roles.create({
       name: roleName,
       mentionable: true,
