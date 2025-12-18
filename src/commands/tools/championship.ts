@@ -95,7 +95,7 @@ const Championship: Command = {
         const id = interaction.options.getInteger('id', true);
 
         const championship = await prisma.championship.findUnique({
-          where: { simgridId: id }
+          where: { id: id }
         });
 
         if (!championship) {
