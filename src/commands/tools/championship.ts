@@ -148,7 +148,6 @@ const Championship: Command = {
         if (championships.length === 0) {
             await interaction.reply({
               content: 'No championships found.',
-              ephemeral: true
             });
             return;
           }

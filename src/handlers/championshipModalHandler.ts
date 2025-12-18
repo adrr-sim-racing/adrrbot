@@ -87,7 +87,6 @@ if (existing) {
 
   await interaction.reply({
     content: `✅ Championship **${championshipId}** added with role **${roleName}**`,
-    ephemeral: true,
   });
 }
 
