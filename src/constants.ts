@@ -85,6 +85,7 @@ export const childRoles: Record<string, string> = {
   '1425235127226859692': '1425234069184315392', // GT3 Open R5+6
   '1425235170562408479': '1425234069184315392', // GT3 Open R7+8
   '1425235209208729670': '1425234069184315392', // GT3 Open R9+10
+  '1468962831688007724': '1468962831688007724', //FOT Season 4
 }
 
 export const roleRounds: Record<string, string> = {
