@@ -100,4 +100,5 @@ export const roleRounds: Record<string, string> = {
   '1425235170562408479': '18833', // GT3 Open R7+8
   '1425235209208729670': '18834', // GT3 Open R9+10
   '1465705704986771510': '21493', // Pre-season
+  '1468962831688007724': '21826', // FOT Season 4
 }
