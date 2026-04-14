@@ -1,11 +1,10 @@
 import { ModalSubmitInteraction } from 'discord.js';
 import { ChampionshipData } from '../interfaces/simgrid';
 import { APIRequestUrls, RequestOptions } from '../constants';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../prisma';
 import fetchData from '../handlers/apiHandler';
 import logger from '../utils/logger';
 
-const prisma = new PrismaClient();
 
 async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
   const roleName = interaction.fields.getTextInputValue('roleName');

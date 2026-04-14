@@ -1,9 +1,7 @@
 import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder, PermissionFlagsBits, MessageFlags } from 'discord.js';
 import { Command } from '../../interfaces/command';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../prisma';
 import logger from '../../utils/logger';
-
-const prisma = new PrismaClient();
 
 const BATCH_SIZE = 100;
 const DELAY_BETWEEN_BATCHES = 5000;

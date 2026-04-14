@@ -2,9 +2,8 @@ import { GuildMember, TextChannel } from 'discord.js';
 import Config from '../config';
 import logger from '../utils/logger';
 import { assessAndWarnHighRiskUser } from '../utils/riskScoring';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../prisma';
 
-const prisma = new PrismaClient();
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 5 * 60 * 1000;
 

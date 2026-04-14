@@ -9,13 +9,12 @@ import {
   ChannelType,
   MessageFlags,
 } from 'discord.js';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../prisma';
 import { Command } from '../../interfaces/command';
 import logger from '../../utils/logger';
 import { assessAndWarnHighRiskUser, calculateUsernameRiskScore } from '../../utils/riskScoring';
 import Config from '../../config';
 
-const prisma = new PrismaClient();
 
 interface RiskCategory {
   range: string;
