@@ -8,12 +8,12 @@ import {
   TextChannel,
   MessageFlags,
 } from 'discord.js';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { prisma } from '../../prisma';
 import { Command } from '../../interfaces/command';
 import { handleMemberWarn } from '../../events/onMemberWarn';
 import logger from '../../utils/logger';
 
-const prisma = new PrismaClient();
 
 export async function warnUser(
   member: GuildMember,

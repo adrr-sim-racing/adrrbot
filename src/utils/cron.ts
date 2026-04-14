@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../prisma';
 import { Client } from 'discord.js';
 import Config from '../config';
 
@@ -17,7 +17,6 @@ export async function cleanUpNewMemberRoles(client: Client) {
     return;
   }
 
-  const prisma = new PrismaClient();
 
   // Threshold date 7 days ago in milliseconds since epoch
   const thresholdMs = Date.now() - 7 * 24 * 60 * 60 * 1000;

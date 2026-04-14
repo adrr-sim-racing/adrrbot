@@ -1,9 +1,8 @@
 import { GuildMember, Message, TextChannel, Guild, Collection, AuditLogEvent } from 'discord.js';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../prisma';
 import logger from './logger';
 import { warnUser } from '../commands/moderation/warn';
 
-const prisma = new PrismaClient();
 
 interface RiskFactors {
   accountAge: number;

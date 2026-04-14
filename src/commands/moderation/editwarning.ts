@@ -1,9 +1,9 @@
 import { SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction } from 'discord.js';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { prisma } from '../../prisma';
 import { Command } from '../../interfaces/command';
 import logger from '../../utils/logger';
 
-const prisma = new PrismaClient();
 
 const EditWarning: Command = {
   data: new SlashCommandBuilder()

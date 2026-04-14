@@ -1,9 +1,8 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../prisma';
 import { Command } from '../../interfaces/command';
 import logger from '../../utils/logger';
 
-const prisma = new PrismaClient();
 
 const FetchWarns: Command = {
   data: new SlashCommandBuilder()
