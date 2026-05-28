@@ -29,14 +29,14 @@ async function getSimGridPreferredName(targetUser: GuildMember): Promise<SimGrid
     const userData = (await fetchData(userDataRequestURL, RequestOptions)) as SimGridUser;
     const preferredName = userData.preferred_name;
 
-    if (preferredName === oldNickname) {
-      const msg = `Nickname for ${targetUser.user.tag} (${targetUser.user.id}) already set to ${preferredName}`;
+    // if (preferredName === oldNickname) {
+    //   const msg = `Nickname for ${targetUser.user.tag} (${targetUser.user.id}) already set to ${preferredName}`;
 
-      return {
-        success: false,
-        message: msg,
-      };
-    }
+    //   return {
+    //     success: false,
+    //     message: msg,
+    //   };
+    // }
 
     return { success: true, preferredName: preferredName, oldNickname: oldNickname, SimGridID: userData.user_id };
   } catch (error) {
