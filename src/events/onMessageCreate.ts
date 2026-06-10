@@ -21,7 +21,10 @@ export const onMessageCreate = async (message: Message) => {
   if (message.author.bot || whitelistedChannels.includes(message.channelId)) return;
 
   const member = message.member;
-  if (!member || member.roles.cache.some((role) => ignoredRoles.includes(role.id))) return;
+  const isSteveMatch = stevePatterns.some((pattern) => pattern.test(message.content));
+
+  if (!member) return;
+  if (!isSteveMatch && member.roles.cache.some((role) => ignoredRoles.includes(role.id))) return;
 
   const now = Date.now();
   const userId = message.author.id;
@@ -40,7 +43,6 @@ export const onMessageCreate = async (message: Message) => {
 
   const isPositiveMatch = positivePatterns.some((pattern) => pattern.test(lowerCaseMessage));
   const isAddrMatch = addrPatterns.some((pattern) => pattern.test(lowerCaseMessage));
-  const isSteveMatch = stevePatterns.some((pattern) => pattern.test(lowerCaseMessage));
 
 if (isPositiveMatch || isAddrMatch || isSteveMatch) {
     if (userData.messageCount < 2) {
