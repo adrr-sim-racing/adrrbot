@@ -17,6 +17,11 @@ const userCooldownPeriod = 15 * 60 * 1000; // 15 minutes
 const globalCooldownPeriod = 10 * 1000; // 10 seconds
 let lastGlobalResponseTime = 0;
 
+const steveGlobalCooldownPeriod = 60 * 60 * 1000; // 1 hour - adjust as needed
+let steveGlobalCount = 0;
+let steveGlobalLastReset = 0;
+const steveGlobalLimit = 3; // adjust as needed
+
 export const onMessageCreate = async (message: Message) => {
   if (message.author.bot || whitelistedChannels.includes(message.channelId)) return;
 
@@ -48,7 +53,16 @@ if (isPositiveMatch || isAddrMatch || isSteveMatch) {
     if (userData.messageCount < 2) {
       let responseArray;
       if (isSteveMatch) {
+        // Reset count if cooldown period has passed
+        if (Date.now() - steveGlobalLastReset > steveGlobalCooldownPeriod) {
+          steveGlobalCount = 0;
+          steveGlobalLastReset = Date.now();
+        }
+
+        if (steveGlobalCount >= steveGlobalLimit) return;
+
         responseArray = steveImages;
+        steveGlobalCount++;
       } else if (isPositiveMatch) {
         responseArray = openLobbyResponses['general'];
       } else {
