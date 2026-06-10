@@ -1,7 +1,7 @@
 import { Message, EmbedBuilder, TextChannel, AttachmentBuilder, MessageReplyOptions } from 'discord.js';
 import { ignoredRoles, whitelistedChannels } from '../constants';
-import { positivePatterns, addrPatterns } from '../utils/patterns';
-import { guidelineResponses, cooldownResponses, addrResponses } from '../handlers/botResponsesHandler';
+import { positivePatterns, addrPatterns, stevePatterns } from '../utils/patterns';
+import { openLobbyResponses, cooldownResponses, addrResponses, steveImages } from '../handlers/botResponsesHandler';
 import { Bot } from '..';
 import Config from '../config';
 import logger from '../utils/logger';
@@ -40,10 +40,19 @@ export const onMessageCreate = async (message: Message) => {
 
   const isPositiveMatch = positivePatterns.some((pattern) => pattern.test(lowerCaseMessage));
   const isAddrMatch = addrPatterns.some((pattern) => pattern.test(lowerCaseMessage));
+  const isSteveMatch = stevePatterns.some((pattern) => pattern.test(lowerCaseMessage));
 
-  if (isPositiveMatch || isAddrMatch) {
+if (isPositiveMatch || isAddrMatch || isSteveMatch) {
     if (userData.messageCount < 2) {
-      const responseArray = isPositiveMatch ? guidelineResponses['general'] : addrResponses;
+      let responseArray;
+      if (isSteveMatch) {
+        responseArray = steveImages;
+      } else if (isPositiveMatch) {
+        responseArray = openLobbyResponses['general'];
+      } else {
+        responseArray = addrResponses;
+      }
+
       const randomResponse = responseArray[Math.floor(Math.random() * responseArray.length)];
 
       const replyPayload: MessageReplyOptions = { content: randomResponse.text };

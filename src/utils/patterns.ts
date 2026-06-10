@@ -4,3 +4,6 @@ export const positivePatterns = [
 export const addrPatterns = [
   /\baddr(?!r)(?!\w)/i,
 ];
+export const stevePatterns = [
+  /#AdminOfTheYear\b/i,
+];

@@ -1,5 +1,5 @@
 {
-  "guidelineResponses": {
+  "openLobbyResponses": {
     "general": [
       { "text": "\"I take no responsibility for dickheads crashing you in an open lobby...\" -  *Steve Worrell*", "file": "https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/image/steve.png" }
     ]
@@ -13,5 +13,16 @@
     { "text": "ADDR? What's that?" },
     { "text": "I'm not sure what ADDR is, but I'm pretty sure it's not a thing." },
     { "text": "I do believe it's spelt ADRR", "file": "https://tenor.com/view/actually-gif-20569320" }
+  ],
+  "steveImages": [
+    { "text": "Here is your #AdminOfTheYear", "file": "https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/drawme.png" },
+    { "text": "Here is your #AdminOfTheYear", "file": "https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/theblueprint.png" },
+    { "text": "Here is your #AdminOfTheYear", "file": "https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/strevesheartwillgoon.png" },
+    { "text": "Here is your #AdminOfTheYear", "file": "https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/matrix.png" },
+    { "text": "Here is your #AdminOfTheYear", "file": "https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/jurassicsteve.png" },
+    { "text": "Here is your #AdminOfTheYear", "file": "https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/judassteve.png" },
+    { "text": "Here is your #AdminOfTheYear", "file": "https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/infographicsteve.png" },
+    { "text": "Here is your #AdminOfTheYear", "file": "https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/eli5steve.jpg" },
+    { "text": "Here is your #AdminOfTheYear", "file": "https://r2.fivemanage.com/Km44dzC3oIVfckiyEjRbl/waxsteve.png" }
   ]
 }

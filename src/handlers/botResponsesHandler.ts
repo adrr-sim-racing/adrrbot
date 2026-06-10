@@ -10,12 +10,14 @@ const processResponse = (response: botResponse) => {
   };
 };
 
-const guidelineResponses = Object.fromEntries(
-  Object.entries(responsesData.guidelineResponses).map(([key, value]) => [key, value.map(processResponse)])
+const openLobbyResponses = Object.fromEntries(
+  Object.entries(responsesData.openLobbyResponses).map(([key, value]) => [key, value.map(processResponse)])
 );
 
 const cooldownResponses = (responsesData.cooldownResponses as botResponse[]).map(processResponse);
 
 const addrResponses = (responsesData.addrResponses as botResponse[]).map(processResponse);
 
-export { guidelineResponses, cooldownResponses, addrResponses };
+const steveImages = (responsesData.steveImages as botResponse[]).map(processResponse);
+
+export { openLobbyResponses, cooldownResponses, addrResponses, steveImages };
