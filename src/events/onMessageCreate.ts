@@ -1,7 +1,7 @@
 import { Message, EmbedBuilder, TextChannel, AttachmentBuilder, MessageReplyOptions } from 'discord.js';
 import { ignoredRoles, whitelistedChannels } from '../constants';
 import { positivePatterns, addrPatterns, stevePatterns } from '../utils/patterns';
-import { openLobbyResponses, cooldownResponses, addrResponses, steveImages } from '../handlers/botResponsesHandler';
+import { openLobbyResponses, cooldownResponses, addrResponses, steveImages, steveCooldowns } from '../handlers/botResponsesHandler';
 import { Bot } from '..';
 import Config from '../config';
 import logger from '../utils/logger';
@@ -50,20 +50,33 @@ export const onMessageCreate = async (message: Message) => {
   const isAddrMatch = addrPatterns.some((pattern) => pattern.test(lowerCaseMessage));
 
 if (isPositiveMatch || isAddrMatch || isSteveMatch) {
+    if (isSteveMatch) {
+      if (Date.now() - steveGlobalLastReset > steveGlobalCooldownPeriod) {
+        steveGlobalCount = 0;
+        steveGlobalLastReset = Date.now();
+      }
+
+      if (steveGlobalCount >= steveGlobalLimit) {
+        const randomCooldownResponse = steveCooldowns[Math.floor(Math.random() * steveCooldowns.length)];
+        await message.reply(randomCooldownResponse.text);
+        lastGlobalResponseTime = now;
+        return;
+      }
+
+      const randomResponse = steveImages[Math.floor(Math.random() * steveImages.length)];
+      const replyPayload: MessageReplyOptions = { content: randomResponse.text };
+      if (randomResponse.file) {
+        replyPayload.files = [new AttachmentBuilder(randomResponse.file)];
+      }
+      await message.reply(replyPayload);
+      steveGlobalCount++;
+      lastGlobalResponseTime = now;
+      return;
+    }
+
     if (userData.messageCount < 2) {
       let responseArray;
-      if (isSteveMatch) {
-        // Reset count if cooldown period has passed
-        if (Date.now() - steveGlobalLastReset > steveGlobalCooldownPeriod) {
-          steveGlobalCount = 0;
-          steveGlobalLastReset = Date.now();
-        }
-
-        if (steveGlobalCount >= steveGlobalLimit) return;
-
-        responseArray = steveImages;
-        steveGlobalCount++;
-      } else if (isPositiveMatch) {
+      if (isPositiveMatch) {
         responseArray = openLobbyResponses['general'];
       } else {
         responseArray = addrResponses;

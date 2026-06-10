@@ -20,4 +20,6 @@ const addrResponses = (responsesData.addrResponses as botResponse[]).map(process
 
 const steveImages = (responsesData.steveImages as botResponse[]).map(processResponse);
 
-export { openLobbyResponses, cooldownResponses, addrResponses, steveImages };
+const steveCooldowns = (responsesData.steveCooldowns as botResponse[]).map(processResponse);
+
+export { openLobbyResponses, cooldownResponses, addrResponses, steveImages, steveCooldowns };
