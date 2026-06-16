@@ -27,7 +27,7 @@ const Ban: Command = {
     const deleteMessageDaysOption = interaction.options.getInteger('delete_message_days');
 
     const reason = (reasonOption as string) || 'No reason provided';
-    const deleteMessageSeconds = (deleteMessageDaysOption || 0) * 24 * 60 * 60;
+    const deleteMessageSeconds = Math.min((deleteMessageDaysOption || 0) * 24 * 60 * 60, 604800); //Max 7 days
 
     if (!user) {
       await interaction.reply({ content: 'User not found!', flags: MessageFlags.Ephemeral });
