@@ -1,9 +1,7 @@
 import { Guild, GuildAuditLogsEntry, EmbedBuilder, TextChannel, AuditLogEvent } from 'discord.js';
 import Config from '../config';
 import logger from '../utils/logger';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../../prisma';
 
 export const onMemberBan = async (auditLogEntry: GuildAuditLogsEntry, guild: Guild) => {
   if (auditLogEntry.action !== AuditLogEvent.MemberBanAdd) {
