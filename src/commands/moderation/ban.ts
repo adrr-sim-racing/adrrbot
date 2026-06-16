@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { Command } from '../../interfaces/command';
 import logger from '../../utils/logger';
 
@@ -18,7 +18,7 @@ const Ban: Command = {
 
   async run(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a guild.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a guild.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -27,20 +27,20 @@ const Ban: Command = {
     const deleteMessageDaysOption = interaction.options.getInteger('delete_message_days');
 
     const reason = (reasonOption as string) || 'No reason provided';
-    const deleteMessageDays = deleteMessageDaysOption || 0;
+    const deleteMessageSeconds = (deleteMessageDaysOption || 0) * 24 * 60 * 60;
 
     if (!user) {
-      await interaction.reply({ content: 'User not found!', ephemeral: true });
+      await interaction.reply({ content: 'User not found!', flags: MessageFlags.Ephemeral });
       return;
     }
 
     try {
-      await interaction.guild.members.ban(user, { reason: reason, deleteMessageDays: deleteMessageDays });
+      await interaction.guild.members.ban(user, { reason: reason, deleteMessageSeconds: deleteMessageSeconds });
 
-      await interaction.reply({ content: `<@${user.id}> has been **banned**. Reason: ${reason}`, ephemeral: false });
+      await interaction.reply({ content: `<@${user.id}> has been **banned**. Reason: ${reason}`, flags: MessageFlags.Ephemeral });
     } catch (error) {
       logger.error(error);
-      await interaction.reply({ content: 'An error occurred while processing the ban.', ephemeral: true });
+      await interaction.reply({ content: 'An error occurred while processing the ban.', flags: MessageFlags.Ephemeral });
     }
   },
 };
