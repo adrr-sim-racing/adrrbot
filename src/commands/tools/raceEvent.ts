@@ -1,4 +1,4 @@
-import { EmbedBuilder, TextChannel, ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits, MessageActionRowComponent } from 'discord.js';
+import { EmbedBuilder, TextChannel, ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits, MessageActionRowComponent, MessageFlags } from 'discord.js';
 import { Bot } from '../..';
 import { Command } from '../../interfaces/command';
 import { ChampionshipData, ChampionshipCarClass } from '../../interfaces/simgrid';
@@ -50,7 +50,7 @@ const raceEvent: Command = {
     const notes = interaction.options.getString('notes');
 
     try {
-      await interaction.deferReply({ ephemeral: true });
+      await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
       const getChampionshipURL = `${APIRequestUrls.getChampionship}${id}`;
       const data = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;

@@ -99,7 +99,7 @@ const Championship: Command = {
         if (!championship) {
           await interaction.reply({
             content: `No championship found with ID **${id}**.`,
-              ephemeral: true
+              flags: MessageFlags.Ephemeral
           });
           return;
         }
@@ -121,7 +121,7 @@ const Championship: Command = {
             );
             await interaction.reply({
               content: `Failed to delete role ${championship.roleId} for championship ${id}`,
-              ephemeral: true
+              flags: MessageFlags.Ephemeral
             });
           }
         }

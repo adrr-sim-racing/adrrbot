@@ -42,11 +42,11 @@ const Purge: Command = {
     const count = interaction.options.getInteger('count');
 
     if (!(interaction.channel instanceof TextChannel)) {
-      await interaction.reply({ content: 'This command can only be used in text channels.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in text channels.', flags: MessageFlags.Ephemeral });
       return;
     }
 
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     if (subcommand === 'any') {
       try {

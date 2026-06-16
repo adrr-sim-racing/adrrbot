@@ -1,4 +1,4 @@
-import { ModalSubmitInteraction } from 'discord.js';
+import { ModalSubmitInteraction, MessageFlags } from 'discord.js';
 import { ChampionshipData } from '../interfaces/simgrid';
 import { APIRequestUrls, RequestOptions } from '../constants';
 import { prisma } from '../prisma';
@@ -14,7 +14,7 @@ async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
   if (!interaction.guild) {
     await interaction.reply({
       content: 'This action can only be used in a server.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
@@ -23,7 +23,7 @@ async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
   if (!interaction.guild.members.me?.permissions.has('ManageRoles')) {
     await interaction.reply({
       content: 'I do not have permission to manage roles.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
@@ -41,7 +41,7 @@ async function handleChampionshipAddModal(interaction: ModalSubmitInteraction) {
   if (!Number.isInteger(championshipId)) {
     await interaction.reply({
       content: 'Championship ID must be a whole number.',
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
 }

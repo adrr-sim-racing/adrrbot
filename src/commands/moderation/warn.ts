@@ -107,7 +107,7 @@ const Warn: Command = {
 
   async run(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command can only be used in a guild.', ephemeral: true });
+      await interaction.reply({ content: 'This command can only be used in a guild.', flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -115,11 +115,11 @@ const Warn: Command = {
     const reasonOption = interaction.options.getString('reason');
 
     if (!reasonOption) {
-      await interaction.reply({ content: 'Please provide a reason for the warning.', ephemeral: true });
+      await interaction.reply({ content: 'Please provide a reason for the warning.', flags: MessageFlags.Ephemeral });
       return;
     }
 
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     try {
       const member = await interaction.guild.members.fetch(userOption.id);
