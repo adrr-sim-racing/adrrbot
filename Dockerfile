@@ -18,3 +18,5 @@ COPY . .
 RUN pnpm build
 
 CMD ["sh", "-c", "npx prisma migrate deploy && pnpm start:production"]
+
+RUN ls -lah /app/prisma/migrations

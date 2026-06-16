@@ -24,4 +24,5 @@ jobs:
         with:
           context: .
           push: true
+          no-cache: true
           tags: stanocs5/adrrbot:latest
