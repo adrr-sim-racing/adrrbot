@@ -3,7 +3,7 @@ import Config from '../config';
 import logger from '../utils/logger';
 import fetchData from '../handlers/apiHandler';
 import { SimGridUser } from '../interfaces/simgrid';
-import { APIRequestUrls, RequestOptions, childRoles, roleRounds } from '../constants';
+import { APIRequestUrls, RequestOptions, childRoles, roleRounds, supporterRoles } from '../constants';
 import { ChampionshipData } from '../interfaces/simgrid';
 
 type SimGridPreferredNameResult =
@@ -29,14 +29,14 @@ async function getSimGridPreferredName(targetUser: GuildMember): Promise<SimGrid
     const userData = (await fetchData(userDataRequestURL, RequestOptions)) as SimGridUser;
     const preferredName = userData.preferred_name;
 
-    // if (preferredName === oldNickname) {
-    //   const msg = `Nickname for ${targetUser.user.tag} (${targetUser.user.id}) already set to ${preferredName}`;
+    if (preferredName === oldNickname) {
+      const msg = `Nickname for ${targetUser.user.tag} (${targetUser.user.id}) already set to ${preferredName}`;
 
-    //   return {
-    //     success: false,
-    //     message: msg,
-    //   };
-    // }
+      return {
+        success: false,
+        message: msg,
+      };
+    }
 
     return { success: true, preferredName: preferredName, oldNickname: oldNickname, SimGridID: userData.user_id };
   } catch (error) {
@@ -84,9 +84,10 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
     return logger.info('Executor ID or target ID is missing from the audit log entry.');
   }
 
-  if (auditLogEntry.executorId !== '709674172493594674') return; // Only trigger if it's SimGrid
+  if (auditLogEntry.executorId !== '709674172493594674') return; // Only trigger for roles added by the SimGrid bot
 
   logger.info(`Fetching member: ${auditLogEntry.targetId}`);
+
   let targetUser;
   try {
     targetUser = await guild.members.fetch(auditLogEntry.targetId);
@@ -95,7 +96,7 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
   }
 
   if (!targetUser) {
-    return logger.info('Unable to find targetUser following MemberRoleUpdate triggering by SimGrid');
+    return logger.info('Unable to find targetUser following MemberRoleUpdate triggered by SimGrid');
   }
 
   const logChannel = targetUser.guild.channels.cache.get(Config.LOG_CHANNEL) as TextChannel;
@@ -111,10 +112,10 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
   if (roleAdded) {
     try {
       // Which role was added?
-      const addedChange = auditLogEntry.changes?.find((change) => change.key === '$add');
-      logger.info(`Added change: ${JSON.stringify(addedChange)}`);
+      const roleAdded = auditLogEntry.changes?.find((change) => change.key === '$add');
+      logger.info(`Added change: ${JSON.stringify(roleAdded)}`);
 
-      if (!addedChange || !addedChange.new)
+      if (!roleAdded || !roleAdded.new)
       {
         logger.info('No added roles found in the audit log entry.');
         return;
@@ -137,45 +138,56 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
         await logChannel.send({ content: result.message });
       }
 
-      const addedRoles = (Array.isArray(addedChange.new) ? addedChange.new : [addedChange.new]) as PartialRole[];
+      const addedRoles = (Array.isArray(roleAdded.new) ? roleAdded.new : [roleAdded.new]) as PartialRole[];
 
       logger.info(`Added roles: ${JSON.stringify(addedRoles)}`);
 
       for (const role of addedRoles) {
-        logger.info(`Processing added role: ${JSON.stringify(role)}`);
         if (!role || !role.id) continue;
-
+        
+        logger.info(`Processing added role: ${JSON.stringify(role)}`);
         logger.info(`Role ID: ${role.id} / Role name: ${role.name}`);
+
         // Is the added role a child role?
         const parentRole = childRoles[role.id];
-        if (!parentRole) return;
+        if (parentRole) {
 
-        logger.info(`Adding parent role: ${parentRole}`);
-        await targetUser.roles.add(parentRole, 'Added parent role');
+          logger.info(`Adding parent role: ${parentRole}`);
+          await targetUser.roles.add(parentRole, 'Added parent role');
 
-        const roundID = roleRounds[role.id];
-        const getChampionshipURL = `${APIRequestUrls.getChampionship}${roundID}`;
-        const roundEntered = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
+          const roundID = roleRounds[role.id];
+          const getChampionshipURL = `${APIRequestUrls.getChampionship}${roundID}`;
+          const roundEntered = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
 
-        logChannel.send({ content: `✅ <@${targetUser.id}> (${targetUser.user.tag}) entered [${roundEntered.name}](<${roundEntered.url}>) - ${roundEntered.spots_taken}/${roundEntered.capacity} entries` });
+          logChannel.send({ content: `✅ <@${targetUser.id}> (${targetUser.user.tag}) entered [${roundEntered.name}](<${roundEntered.url}>) - ${roundEntered.spots_taken}/${roundEntered.capacity} entries` });
+        }
+        
+        // Is the added role a supporter role?
+        for (const supporterRole of supporterRoles) {
+          if (role.id === supporterRole) {
+            // Add ADRR Supporters role
+            await targetUser.roles.add(role.id, 'Added ADRR Supporters role');
+            logChannel.send({ content: `✅ <@${targetUser.id}> (${targetUser.user.tag}) has become a **${role.name}**!` });
+          }
+        }
       }
     } catch (error) {
-      const msg = `Failed to add parent role for ${targetUser.user.tag} (${targetUser.user.id}):`;
+      const msg = `Failed to add role for ${targetUser.user.tag} (${targetUser.user.id}):`;
       logger.error(msg, error);
       await logChannel.send({ content: msg });
     }
   }
 
   if (roleRemoved) {
-      const removedChange = auditLogEntry.changes?.find((change) => change.key === '$remove');
-      logger.info(`Removed change: ${JSON.stringify(removedChange)}`);
+      const roleRemoved = auditLogEntry.changes?.find((change) => change.key === '$remove');
+      logger.info(`Removed change: ${JSON.stringify(roleRemoved)}`);
 
-      if (!removedChange || !removedChange.new)
+      if (!roleRemoved || !roleRemoved.new)
       {
         logger.info('No removed roles found in the audit log entry.');
         return;
       }
-      const removedRoles = (Array.isArray(removedChange.new) ? removedChange.new : [removedChange.new]) as PartialRole[];
+      const removedRoles = (Array.isArray(roleRemoved.new) ? roleRemoved.new : [roleRemoved.new]) as PartialRole[];
 
       for (const role of removedRoles) {
         logger.info(`Processing removed role: ${JSON.stringify(role)}`);

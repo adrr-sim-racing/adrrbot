@@ -73,6 +73,12 @@ export const ChannelIDs = {
   liveries: '1385943791940403280', // adrr liveries channel
 };
 
+export const supporterRoles = [
+  '1556986439982653481', // ADRR Legend
+  '1556986384982610011', // ADRR Backer+
+  '1556986057940140113', // ADRR Backer
+]
+
 export const childRoles: Record<string, string> = {
   '1420706099052679188': '1420706290283450468', // FOT S3 R1
   '1420706850852044902': '1420706290283450468', // FOT S3 R2
