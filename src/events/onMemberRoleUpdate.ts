@@ -115,15 +115,14 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
       const roleAdded = auditLogEntry.changes?.find((change) => change.key === '$add');
       logger.info(`Added change: ${JSON.stringify(roleAdded)}`);
 
-      if (!roleAdded || !roleAdded.new)
-      {
+      if (!roleAdded || !roleAdded.new) {
         logger.info('No added roles found in the audit log entry.');
         return;
       }
 
       const result = await getSimGridPreferredName(targetUser);
 
-      if(result.success) {
+      if (result.success) {
         const userRenamedEmbed = await updateMemberNickname(
           targetUser,
           result.preferredName,
@@ -133,7 +132,6 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
 
         await logChannel.send({ embeds: [userRenamedEmbed] });
         logger.info(`Updated nickname for ${targetUser.user.tag} (${targetUser.user.id}) to ${result.preferredName}`);
-
       } else {
         await logChannel.send({ content: result.message });
       }
@@ -144,30 +142,33 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
 
       for (const role of addedRoles) {
         if (!role || !role.id) continue;
-        
+
         logger.info(`Processing added role: ${JSON.stringify(role)}`);
         logger.info(`Role ID: ${role.id} / Role name: ${role.name}`);
 
         // Is the added role a child role?
         const parentRole = childRoles[role.id];
         if (parentRole) {
-
           logger.info(`Adding parent role: ${parentRole}`);
           await targetUser.roles.add(parentRole, 'Added parent role');
 
           const roundID = roleRounds[role.id];
           const getChampionshipURL = `${APIRequestUrls.getChampionship}${roundID}`;
-          const roundEntered = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
+          const roundEntered = (await fetchData(getChampionshipURL, RequestOptions)) as ChampionshipData;
 
-          logChannel.send({ content: `✅ <@${targetUser.id}> (${targetUser.user.tag}) entered [${roundEntered.name}](<${roundEntered.url}>) - ${roundEntered.spots_taken}/${roundEntered.capacity} entries` });
+          logChannel.send({
+            content: `✅ <@${targetUser.id}> (${targetUser.user.tag}) entered [${roundEntered.name}](<${roundEntered.url}>) - ${roundEntered.spots_taken}/${roundEntered.capacity} entries`,
+          });
         }
-        
+
         // Is the added role a supporter role?
         for (const supporterRole of supporterRoles) {
           if (role.id === supporterRole) {
             // Add ADRR Supporters role
             await targetUser.roles.add(role.id, 'Added ADRR Supporters role');
-            logChannel.send({ content: `✅ <@${targetUser.id}> (${targetUser.user.tag}) has become a **${role.name}**!` });
+            logChannel.send({
+              content: `✅ <@${targetUser.id}> (${targetUser.user.tag}) has become a **${role.name}**!`,
+            });
           }
         }
       }
@@ -179,30 +180,42 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
   }
 
   if (roleRemoved) {
-      const roleRemoved = auditLogEntry.changes?.find((change) => change.key === '$remove');
-      logger.info(`Removed change: ${JSON.stringify(roleRemoved)}`);
+    const roleRemoved = auditLogEntry.changes?.find((change) => change.key === '$remove');
+    logger.info(`Removed change: ${JSON.stringify(roleRemoved)}`);
 
-      if (!roleRemoved || !roleRemoved.new)
-      {
-        logger.info('No removed roles found in the audit log entry.');
-        return;
-      }
-      const removedRoles = (Array.isArray(roleRemoved.new) ? roleRemoved.new : [roleRemoved.new]) as PartialRole[];
+    if (!roleRemoved || !roleRemoved.new) {
+      logger.info('No removed roles found in the audit log entry.');
+      return;
+    }
+    const removedRoles = (Array.isArray(roleRemoved.new) ? roleRemoved.new : [roleRemoved.new]) as PartialRole[];
 
-      for (const role of removedRoles) {
-        logger.info(`Processing removed role: ${JSON.stringify(role)}`);
-        if (!role || !role.id) continue;
+    for (const role of removedRoles) {
+      logger.info(`Processing removed role: ${JSON.stringify(role)}`);
+      if (!role || !role.id) continue;
 
-        logger.info(`Role ID: ${role.id} / Role name: ${role.name}`);
+      logger.info(`Role ID: ${role.id} / Role name: ${role.name}`);
 
-        const parentRole = childRoles[role.id];
-        if (!parentRole) return;
-
+      const parentRole = childRoles[role.id];
+      if (parentRole) {
         const roundID = roleRounds[role.id];
         const getChampionshipURL = `${APIRequestUrls.getChampionship}${roundID}`;
-        const roundEntered = await fetchData(getChampionshipURL, RequestOptions) as ChampionshipData;
+        const roundEntered = (await fetchData(getChampionshipURL, RequestOptions)) as ChampionshipData;
 
-        logChannel.send({ content: `❌ <@${targetUser.id}> (${targetUser.user.tag}) withdrew from [${roundEntered.name}](<${roundEntered.url}>) - ${roundEntered.spots_taken}/${roundEntered.capacity} entries` });
+        logChannel.send({
+          content: `❌ <@${targetUser.id}> (${targetUser.user.tag}) withdrew from [${roundEntered.name}](<${roundEntered.url}>) - ${roundEntered.spots_taken}/${roundEntered.capacity} entries`,
+        });
       }
+
+      // Is the removed role a supporter role?
+      for (const supporterRole of supporterRoles) {
+        if (role.id === supporterRole) {
+          // Remove ADRR Supporters role
+          await targetUser.roles.remove(role.id, 'Removed ADRR Supporters role');
+          logChannel.send({
+            content: `✅ <@${targetUser.id}> (${targetUser.user.tag}) is no longer a **${role.name}**!`,
+          });
+        }
+      }
+    }
   }
 };
