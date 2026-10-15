@@ -131,7 +131,7 @@ const raceEvent: Command = {
       ]
       });
     } catch (error) {
-      logger.error('Error fetching championship data:', error);
+      logger.error('Error fetching championship data:', JSON.stringify(error));
       await interaction.editReply('Failed to retrieve championship data. Please try again later.');
     }
   },
