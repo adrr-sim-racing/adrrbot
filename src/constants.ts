@@ -1,4 +1,4 @@
-import { RGBTuple } from "discord.js";
+import { RGBTuple } from 'discord.js';
 import Config from './config';
 
 export const GithubUrl = 'https://github.com/adrr-simracing';
@@ -6,10 +6,9 @@ export const GithubApi = 'https://api.github.com/repos/adrr-simracing';
 export const WebsiteUrl = 'https://adrr.net';
 
 export const APIRequestUrls = {
-  baseURL: "https://www.thesimgrid.com/api/v1",
-  getChampionship: "https://www.thesimgrid.com/api/v1/championships/",
-  getUser: "https://www.thesimgrid.com/api/v1/users/"
-
+  baseURL: 'https://www.thesimgrid.com/api/v1',
+  getChampionship: 'https://www.thesimgrid.com/api/v1/championships/',
+  getUser: 'https://www.thesimgrid.com/api/v1/users/',
 };
 
 export const RequestOptions: RequestInit = {
@@ -21,15 +20,15 @@ export const RequestOptions: RequestInit = {
   },
 };
 export const Championships = {
-  fot:  {
+  fot: {
     name: 'FOT',
     thumbnailImage: 'https://i.fmfile.com/Km44dzC3oIVfckiyEjRbl/FOT_Light.png',
-    color: [235, 251, 72] as RGBTuple,  // ADRR Yellow
+    color: [235, 251, 72] as RGBTuple, // ADRR Yellow
   },
   gt3o: {
     name: 'GT3O',
     thumbnailImage: 'https://chibi.iitranq.co.uk/rdl5AH9xTh38.webp',
-    color: [192, 102, 147] as RGBTuple,  // GT3O Pink
+    color: [192, 102, 147] as RGBTuple, // GT3O Pink
   },
   aec: {
     name: 'AEC',
@@ -39,16 +38,16 @@ export const Championships = {
   default: {
     name: 'Default',
     thumbnailImage: null,
-    color: [235, 251, 72] as RGBTuple,  // ADRR Yellow
-  }
+    color: [235, 251, 72] as RGBTuple, // ADRR Yellow
+  },
 };
 export const ADRRColours = {
-  Primary: [235, 251, 72] as RGBTuple,  // ADRR Yellow
-  Secondary: [237, 37, 78] as RGBTuple,  // USC Red
+  Primary: [235, 251, 72] as RGBTuple, // ADRR Yellow
+  Secondary: [237, 37, 78] as RGBTuple, // USC Red
 };
 export const ADRRColoursArray: RGBTuple[] = Object.values(ADRRColours);
 
-export const DailyRaceChannelID = "1349283376560865342";
+export const DailyRaceChannelID = '1349283376560865342';
 
 // ignored role IDs for onMessageCreate.ts
 export const ignoredRoles = [
@@ -73,11 +72,13 @@ export const ChannelIDs = {
   liveries: '1385943791940403280', // adrr liveries channel
 };
 
+export const mainSupporterRole = '1556986611311575080'; // ADRR Supporters
+
 export const supporterRoles = [
   '1556986439982653481', // ADRR Legend
   '1556986384982610011', // ADRR Backer+
   '1556986057940140113', // ADRR Backer
-]
+];
 
 export const childRoles: Record<string, string> = {
   '1420706099052679188': '1420706290283450468', // FOT S3 R1
@@ -92,7 +93,7 @@ export const childRoles: Record<string, string> = {
   '1425235170562408479': '1425234069184315392', // GT3 Open R7+8
   '1425235209208729670': '1425234069184315392', // GT3 Open R9+10
   '1468962831688007724': '1468962831688007724', //FOT Season 4
-}
+};
 
 export const roleRounds: Record<string, string> = {
   '1420706099052679188': '18476', // FOT S3 R1
@@ -109,4 +110,4 @@ export const roleRounds: Record<string, string> = {
   '1465705704986771510': '21493', // Pre-season
   '1468962831688007724': '21826', // FOT Season 4
   '1507105303458746521': '24724', // FOT Season 5
-}
+};

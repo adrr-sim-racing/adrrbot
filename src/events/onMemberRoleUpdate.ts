@@ -3,7 +3,14 @@ import Config from '../config';
 import logger from '../utils/logger';
 import fetchData from '../handlers/apiHandler';
 import { SimGridUser } from '../interfaces/simgrid';
-import { APIRequestUrls, RequestOptions, childRoles, roleRounds, supporterRoles } from '../constants';
+import {
+  APIRequestUrls,
+  RequestOptions,
+  childRoles,
+  roleRounds,
+  supporterRoles,
+  mainSupporterRole,
+} from '../constants';
 import { ChampionshipData } from '../interfaces/simgrid';
 
 type SimGridPreferredNameResult =
@@ -120,22 +127,6 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
         return;
       }
 
-      const result = await getSimGridPreferredName(targetUser);
-
-      if (result.success) {
-        const userRenamedEmbed = await updateMemberNickname(
-          targetUser,
-          result.preferredName,
-          result.oldNickname,
-          result.SimGridID
-        );
-
-        await logChannel.send({ embeds: [userRenamedEmbed] });
-        logger.info(`Updated nickname for ${targetUser.user.tag} (${targetUser.user.id}) to ${result.preferredName}`);
-      } else {
-        await logChannel.send({ content: result.message });
-      }
-
       const addedRoles = (Array.isArray(roleAdded.new) ? roleAdded.new : [roleAdded.new]) as PartialRole[];
 
       logger.info(`Added roles: ${JSON.stringify(addedRoles)}`);
@@ -146,8 +137,26 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
         logger.info(`Processing added role: ${JSON.stringify(role)}`);
         logger.info(`Role ID: ${role.id} / Role name: ${role.name}`);
 
+        const result = await getSimGridPreferredName(targetUser);
+
+        if (result.success) {
+          const userRenamedEmbed = await updateMemberNickname(
+            targetUser,
+            result.preferredName,
+            result.oldNickname,
+            result.SimGridID
+          );
+
+          await logChannel.send({ embeds: [userRenamedEmbed] });
+          logger.info(`Updated nickname for ${targetUser.user.tag} (${targetUser.user.id}) to ${result.preferredName}`);
+        } else {
+          await logChannel.send({ content: result.message });
+        }
+
         // Is the added role a child role?
         const parentRole = childRoles[role.id];
+
+        logger.info(`Parent role: ${parentRole}`);
         if (parentRole) {
           logger.info(`Adding parent role: ${parentRole}`);
           await targetUser.roles.add(parentRole, 'Added parent role');
@@ -163,9 +172,13 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
 
         // Is the added role a supporter role?
         for (const supporterRole of supporterRoles) {
+          logger.info(
+            `Checking role: ${supporterRole} (${typeof supporterRole}) === ${role.id} (${typeof role.id}) : ${supporterRole === role.id}`
+          );
           if (role.id === supporterRole) {
             // Add ADRR Supporters role
-            await targetUser.roles.add(role.id, 'Added ADRR Supporters role');
+            logger.info(`Adding role`);
+            await targetUser.roles.add(mainSupporterRole, 'Added ADRR Supporters role');
             logChannel.send({
               content: `✅ <@${targetUser.id}> (${targetUser.user.tag}) has become a **${role.name}**!`,
             });
@@ -210,7 +223,7 @@ export const onMemberRoleUpdate = async (auditLogEntry: GuildAuditLogsEntry, gui
       for (const supporterRole of supporterRoles) {
         if (role.id === supporterRole) {
           // Remove ADRR Supporters role
-          await targetUser.roles.remove(role.id, 'Removed ADRR Supporters role');
+          await targetUser.roles.remove(mainSupporterRole, 'Removed ADRR Supporters role');
           logChannel.send({
             content: `✅ <@${targetUser.id}> (${targetUser.user.tag}) is no longer a **${role.name}**!`,
           });
